@@ -1,0 +1,185 @@
+@tool
+class_name LaIKTwoBone
+extends LaIK
+
+
+@export var bone_one: LaBone:
+	set(b):
+		undo_modifications()
+		queue_redraw()
+		stop_listen_bones()
+		bone_one = b
+		start_listen_bones()
+
+@export var bone_two: LaBone:
+	set(b):
+		undo_modifications()
+		queue_redraw()
+		stop_listen_bones()
+		bone_two = b
+		start_listen_bones()
+
+@export var target: Node2D
+
+@export var flip_bend_direction: bool = false
+
+@export_group("Contraints", "constraint_")
+
+@export var constraint_enabled: bool = false:
+	set(e):
+		queue_redraw()
+		constraint_enabled = e
+
+## Show a line were [member bone_two] and [member target] can meet.
+@export var constraint_visible: bool = true:
+	set(v):
+		queue_redraw()
+		constraint_visible = v
+
+## [b]Note[/b]: This distance is unaffected by scaling.
+@export var constraint_min_distance: float = 0:
+	set(d):
+		if d >= 0 and d <= constraint_max_distance:
+			constraint_min_distance = d
+
+## [b]Note[/b]: This distance is unaffected by scaling.
+@export var constraint_max_distance: float = 0:
+	set(d):
+		if d >= 0 and d >= constraint_min_distance:
+			constraint_max_distance = d
+
+
+func _draw() -> void:
+	_draw_gizmo()
+
+
+func start_listen_bones() -> void:
+	if bone_one:
+		if not bone_one.is_connected("transform_changed", queue_redraw):
+			bone_one.transform_changed.connect(queue_redraw)
+	
+	if bone_two:
+		if not bone_two.is_connected("transform_changed", queue_redraw):
+			bone_two.transform_changed.connect(queue_redraw)
+
+
+func stop_listen_bones() -> void:
+	if bone_one:
+		if bone_one.is_connected("transform_changed", queue_redraw):
+			bone_one.transform_changed.disconnect(queue_redraw)
+	
+	if bone_two:
+		if bone_two.is_connected("transform_changed", queue_redraw):
+			bone_two.transform_changed.disconnect(queue_redraw)
+
+
+func undo_modifications() -> void:
+	if bone_one:
+		bone_one.restore_pose()
+	
+	if bone_two:
+		bone_two.restore_pose()
+
+
+func apply_modifications(_delta: float) -> void:
+	if not enabled:
+		return
+	
+	if not target:
+		return
+	
+	if not bone_one:
+		return
+	
+	if not bone_two:
+		return
+	
+	bone_one.cache_pose()
+	bone_two.cache_pose()
+	bone_one.is_pose_modified = true
+	bone_two.is_pose_modified = true
+	
+	var target_distance: float = bone_one.global_position.distance_to(target.global_position)
+	
+	if constraint_enabled:
+		# Zero means that there is no distance contraint.
+		if constraint_min_distance > 0 and target_distance < constraint_min_distance:
+			target_distance = constraint_min_distance
+		
+		# Zero means that there is no distance contraint.
+		if constraint_max_distance > 0 and target_distance > constraint_max_distance:
+			target_distance = constraint_max_distance
+	
+	var bone_one_length: float = bone_one.get_bone_length()
+	var bone_two_length: float = bone_two.get_bone_length()
+	var out_of_range: bool = target_distance > bone_one_length + bone_two_length 
+	var angle_to_x_axis: float = (target.global_position - bone_one.global_position).angle()
+	
+	# Easiest case, target is out of range.
+	if out_of_range:
+		bone_one.global_rotation = angle_to_x_axis - bone_one.get_bone_angle()
+		bone_two.global_rotation = angle_to_x_axis - bone_two.get_bone_angle()
+		return
+	
+	var angle_0: float = acos(
+		(target_distance ** 2 + bone_one_length ** 2 - bone_two_length ** 2) / (2 * target_distance * bone_one_length)
+	)
+	
+	var angle_1: float = acos(
+		(bone_two_length ** 2 + bone_one_length ** 2 - target_distance ** 2) / (2 * bone_two_length * bone_one_length)
+	)
+	
+	# Cannot solve for this angles! Do nothing to avoid setting the rotation to NAN.
+	if is_nan(angle_0) or is_nan(angle_1):
+		return
+	
+	if flip_bend_direction:
+		angle_0 = -angle_0
+		angle_1 = -angle_1
+	
+	# Global rotation is affected by scale changes.
+	if bone_one.global_scale.sign().x == bone_one.global_scale.sign().y:
+		bone_one.global_rotation = angle_to_x_axis - angle_0 - bone_one.get_bone_angle()
+	else:
+		bone_one.global_rotation = angle_to_x_axis + angle_0 + bone_one.get_bone_angle()
+	
+	# Local rotation is unaffected by scale changes.
+	bone_two.rotation = -PI - angle_1 - bone_two.get_bone_angle() + bone_one.get_bone_angle()
+
+
+func _draw_gizmo() -> void:
+	if not constraint_visible:
+		return
+	
+	if not bone_one:
+		return
+	
+	if not bone_two:
+		return
+	
+	if not target:
+		return
+	
+	if not EditorInterface.has_method("get_editor_settings"):
+		queue_redraw()
+		return
+	
+	draw_set_transform(bone_one.global_position, 0)
+	
+	var min_distance: float = 0
+	var max_distance: float = bone_one.get_bone_length() + bone_two.get_bone_length()
+	
+	if constraint_enabled:
+		min_distance = constraint_min_distance
+		
+		# Zero means that there is no distance contraint.
+		if constraint_max_distance > 0:
+			max_distance = constraint_max_distance
+	
+	var editor_settings = EditorInterface.get_editor_settings()
+	var bone_ik_color: Color = editor_settings.get_setting("editors/2d/bone_ik_color")
+	var target_direction: Vector2 = bone_one.global_position.direction_to(target.global_position)
+	var min_position: Vector2 = target_direction * min_distance
+	var max_position: Vector2 = target_direction * max_distance
+	
+	draw_line(min_position, max_position, bone_ik_color, 2.0)

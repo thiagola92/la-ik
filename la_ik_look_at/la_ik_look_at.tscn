@@ -1,0 +1,6 @@
+[gd_scene load_steps=2 format=3 uid="uid://b1rrwiveaqsq0"]
+
+[ext_resource type="Script" path="res://la_ik_look_at/la_ik_look_at.gd" id="1_3c14r"]
+
+[node name="LaIKLookAt" type="Node2D"]
+script = ExtResource("1_3c14r")

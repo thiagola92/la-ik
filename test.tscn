@@ -1,0 +1,24 @@
+[gd_scene load_steps=3 format=3 uid="uid://ddk88xfd1v1jr"]
+
+[ext_resource type="Script" path="res://la_skeleton/la_skeleton.gd" id="1_f5x3m"]
+[ext_resource type="Script" path="res://la_bone/la_bone.gd" id="2_2eft7"]
+
+[node name="Test" type="Node2D"]
+
+[node name="LaSkeleton" type="Node2D" parent="."]
+script = ExtResource("1_f5x3m")
+
+[node name="LaBone" type="Node2D" parent="LaSkeleton"]
+script = ExtResource("2_2eft7")
+
+[node name="LaBone" type="Node2D" parent="LaSkeleton/LaBone"]
+position = Vector2(0, -55)
+script = ExtResource("2_2eft7")
+
+[node name="LaBone" type="Node2D" parent="LaSkeleton/LaBone/LaBone"]
+position = Vector2(58, 0)
+script = ExtResource("2_2eft7")
+
+[node name="LaBone2" type="Node2D" parent="LaSkeleton/LaBone/LaBone"]
+position = Vector2(-58, 0)
+script = ExtResource("2_2eft7")
