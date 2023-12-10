@@ -5,19 +5,19 @@ extends LaIK
 
 @export var bone_one: LaBone:
 	set(b):
-		undo_modifications()
-		queue_redraw()
-		stop_listen_bones()
+		_undo_modifications()
+		_stop_listen_bones()
 		bone_one = b
-		start_listen_bones()
+		_start_listen_bones()
+		queue_redraw()
 
 @export var bone_two: LaBone:
 	set(b):
-		undo_modifications()
-		queue_redraw()
-		stop_listen_bones()
+		_undo_modifications()
+		_stop_listen_bones()
 		bone_two = b
-		start_listen_bones()
+		_start_listen_bones()
+		queue_redraw()
 
 @export var target: Node2D
 
@@ -53,27 +53,27 @@ func _draw() -> void:
 	_draw_gizmo()
 
 
-func start_listen_bones() -> void:
+func _start_listen_bones() -> void:
 	if bone_one:
-		if not bone_one.is_connected("transform_changed", queue_redraw):
+		if not bone_one.transform_changed.is_connected(queue_redraw):
 			bone_one.transform_changed.connect(queue_redraw)
 	
 	if bone_two:
-		if not bone_two.is_connected("transform_changed", queue_redraw):
+		if not bone_two.transform_changed.is_connected(queue_redraw):
 			bone_two.transform_changed.connect(queue_redraw)
 
 
-func stop_listen_bones() -> void:
+func _stop_listen_bones() -> void:
 	if bone_one:
-		if bone_one.is_connected("transform_changed", queue_redraw):
+		if bone_one.transform_changed.is_connected(queue_redraw):
 			bone_one.transform_changed.disconnect(queue_redraw)
 	
 	if bone_two:
-		if bone_two.is_connected("transform_changed", queue_redraw):
+		if bone_two.transform_changed.is_connected(queue_redraw):
 			bone_two.transform_changed.disconnect(queue_redraw)
 
 
-func undo_modifications() -> void:
+func _undo_modifications() -> void:
 	if bone_one:
 		bone_one.restore_pose()
 	
@@ -81,7 +81,7 @@ func undo_modifications() -> void:
 		bone_two.restore_pose()
 
 
-func apply_modifications(_delta: float) -> void:
+func _apply_modifications(_delta: float) -> void:
 	if not enabled:
 		return
 	

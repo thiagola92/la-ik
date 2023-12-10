@@ -10,8 +10,8 @@ enum ExecutionMode {
 	PHYISIC_PROCESS,
 }
 
-## Enable/disable node inverse kinematic.[br][br]
-## [b]Note[/b]: Disabling should restore the bone transform to how it was before enabling.
+## Enable/disable inverse kinematic over bones.[br][br]
+## When enabled, bones will [b]not[/b] store changes and will have the transform restore when disabled.
 @export var enabled: bool = true:
 	set(e):
 		enabled = e
@@ -27,28 +27,32 @@ enum ExecutionMode {
 
 
 func _ready() -> void:
-	modification_disabled.connect(undo_modifications)
-	tree_exiting.connect(undo_modifications)
+	modification_disabled.connect(_undo_modifications)
+	tree_exiting.connect(_undo_modifications)
+	execution_mode = execution_mode
 
 
 func _process(delta: float) -> void:
-	apply_modifications(delta)
+	_apply_modifications(delta)
 	
 	# Lock transform, this way we can draw lines/arcs without the user interfere.
 	global_transform = Transform2D.IDENTITY
 
 
 func _physics_process(delta: float) -> void:
-	apply_modifications(delta)
+	_apply_modifications(delta)
+	
+	# Lock transform, this way we can draw lines/arcs without the user interfere.
+	global_transform = Transform2D.IDENTITY
 
 
 ## Virtual method.
-func undo_modifications() -> void:
+func _undo_modifications() -> void:
 	pass
 
 
 ## Virtual method.
-func apply_modifications(_delta: float) -> void:
+func _apply_modifications(_delta: float) -> void:
 	pass
 
 

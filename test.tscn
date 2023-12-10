@@ -1,24 +1,37 @@
-[gd_scene load_steps=3 format=3 uid="uid://ddk88xfd1v1jr"]
+[gd_scene load_steps=4 format=3 uid="uid://ddk88xfd1v1jr"]
 
-[ext_resource type="Script" path="res://la_skeleton/la_skeleton.gd" id="1_f5x3m"]
-[ext_resource type="Script" path="res://la_bone/la_bone.gd" id="2_2eft7"]
+[ext_resource type="Script" path="res://la_bone/la_bone.gd" id="1_ww7yh"]
+[ext_resource type="Script" path="res://la_ik_look_at/la_ik_look_at.gd" id="2_gwxny"]
+[ext_resource type="Script" path="res://la_ik_two_bone/la_ik_two_bone.gd" id="3_mlw6q"]
 
 [node name="Test" type="Node2D"]
 
-[node name="LaSkeleton" type="Node2D" parent="."]
-script = ExtResource("1_f5x3m")
+[node name="AimLook" type="Marker2D" parent="."]
+position = Vector2(150, 25)
 
-[node name="LaBone" type="Node2D" parent="LaSkeleton"]
-script = ExtResource("2_2eft7")
+[node name="AimTwo" type="Marker2D" parent="."]
+position = Vector2(61, -37)
 
-[node name="LaBone" type="Node2D" parent="LaSkeleton/LaBone"]
+[node name="LaBone" type="Node2D" parent="."]
+script = ExtResource("1_ww7yh")
+
+[node name="LaBone" type="Node2D" parent="LaBone"]
 position = Vector2(0, -55)
-script = ExtResource("2_2eft7")
+script = ExtResource("1_ww7yh")
+bone_length = 60.0
 
-[node name="LaBone" type="Node2D" parent="LaSkeleton/LaBone/LaBone"]
-position = Vector2(58, 0)
-script = ExtResource("2_2eft7")
+[node name="LaBone2" type="Node2D" parent="LaBone"]
+position = Vector2(41, 0)
+script = ExtResource("1_ww7yh")
 
-[node name="LaBone2" type="Node2D" parent="LaSkeleton/LaBone/LaBone"]
-position = Vector2(-58, 0)
-script = ExtResource("2_2eft7")
+[node name="LaIKLookAt" type="Node2D" parent="." node_paths=PackedStringArray("bone", "target")]
+script = ExtResource("2_gwxny")
+bone = NodePath("../LaBone/LaBone2")
+target = NodePath("../AimLook")
+
+[node name="LaIKTwoBone" type="Node2D" parent="." node_paths=PackedStringArray("bone_one", "bone_two", "target")]
+script = ExtResource("3_mlw6q")
+bone_one = NodePath("../LaBone")
+bone_two = NodePath("../LaBone/LaBone")
+target = NodePath("../AimTwo")
+enabled = false
