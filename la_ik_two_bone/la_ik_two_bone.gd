@@ -57,8 +57,6 @@ func _start_listen_bone(bone: LaBone) -> void:
 	if not bone:
 		return
 	
-	printt("Start listen to bone", bone.name)
-	
 	# The first child bone is used to know where the bone is looking at,
 	# so we need to listen if the first child bone change.
 	if not bone.child_order_changed.is_connected(queue_redraw):
@@ -78,8 +76,6 @@ func _start_listen_bone(bone: LaBone) -> void:
 
 
 func _listen_child_bone_changes(previous_child_bone: LaBone, current_child_bone: LaBone) -> void:
-	printt("Stop listening child bone", previous_child_bone, "and start listening to", current_child_bone)
-	
 	if previous_child_bone:
 		if previous_child_bone.transform_changed.is_connected(queue_redraw):
 			previous_child_bone.transform_changed.disconnect(queue_redraw)
@@ -100,8 +96,6 @@ func _forget_bone(bone: LaBone) -> void:
 func _stop_listen_bone(bone: LaBone) -> void:
 	if not bone:
 		return
-	
-	printt("Stop listen to bone", bone.name)
 	
 	if bone.child_order_changed.is_connected(queue_redraw):
 		bone.child_order_changed.disconnect(queue_redraw)

@@ -3,22 +3,23 @@
 [ext_resource type="Script" path="res://la_bone/la_bone.gd" id="1_yvp1u"]
 [ext_resource type="Script" path="res://la_ik_two_bone/la_ik_two_bone.gd" id="2_jw1vy"]
 
-[sub_resource type="SkeletonModification2DTwoBoneIK" id="SkeletonModification2DTwoBoneIK_rqap4"]
-target_nodepath = NodePath("../AimTwo")
+[sub_resource type="SkeletonModification2DTwoBoneIK" id="SkeletonModification2DTwoBoneIK_g2nr3"]
+target_nodepath = NodePath("../Aim/AimTwo2")
 joint_one_bone_idx = 0
 joint_one_bone2d_node = NodePath("Bone2D")
 joint_two_bone_idx = 1
-joint_two_bone2d_node = NodePath("Bone2D/Bone2D2")
+joint_two_bone2d_node = NodePath("Bone2D/Bone2D")
 editor/draw_min_max = true
 
-[sub_resource type="SkeletonModificationStack2D" id="SkeletonModificationStack2D_54s6l"]
+[sub_resource type="SkeletonModificationStack2D" id="SkeletonModificationStack2D_exlf2"]
 enabled = true
 modification_count = 1
-modifications/0 = SubResource("SkeletonModification2DTwoBoneIK_rqap4")
+modifications/0 = SubResource("SkeletonModification2DTwoBoneIK_g2nr3")
 
 [node name="Test2" type="Node2D"]
 
 [node name="Main" type="Node2D" parent="."]
+position = Vector2(0, -100)
 script = ExtResource("1_yvp1u")
 
 [node name="One" type="Node2D" parent="Main"]
@@ -29,24 +30,31 @@ script = ExtResource("1_yvp1u")
 position = Vector2(100, 0)
 script = ExtResource("1_yvp1u")
 
+[node name="Aim" type="Node2D" parent="."]
+position = Vector2(250, 0)
+
+[node name="AimTwo" type="Marker2D" parent="Aim"]
+position = Vector2(0, -100)
+
+[node name="AimTwo2" type="Marker2D" parent="Aim"]
+position = Vector2(0, 100)
+
 [node name="LaIKTwoBone" type="Node2D" parent="." node_paths=PackedStringArray("bone_one", "bone_two", "target")]
 script = ExtResource("2_jw1vy")
 bone_one = NodePath("../Main")
 bone_two = NodePath("../Main/One")
-target = NodePath("../AimTwo")
-
-[node name="AimTwo" type="Marker2D" parent="."]
-position = Vector2(88, -21)
+target = NodePath("../Aim/AimTwo")
 
 [node name="Skeleton2D" type="Skeleton2D" parent="."]
-modification_stack = SubResource("SkeletonModificationStack2D_54s6l")
+position = Vector2(0, 100)
+modification_stack = SubResource("SkeletonModificationStack2D_exlf2")
 
 [node name="Bone2D" type="Bone2D" parent="Skeleton2D"]
 metadata/_local_pose_override_enabled_ = true
 
-[node name="Bone2D2" type="Bone2D" parent="Skeleton2D/Bone2D"]
+[node name="Bone2D" type="Bone2D" parent="Skeleton2D/Bone2D"]
 position = Vector2(100, 0)
 metadata/_local_pose_override_enabled_ = true
 
-[node name="Bone2D" type="Bone2D" parent="Skeleton2D/Bone2D/Bone2D2"]
+[node name="Bone2D" type="Bone2D" parent="Skeleton2D/Bone2D/Bone2D"]
 position = Vector2(100, 0)

@@ -41,7 +41,6 @@ extends LaIK
 
 func _draw() -> void:
 	if constraint_visible:
-		#print("Redrawing look at")
 		_draw_angle_constraints(
 			bone, constraint_min_angle, constraint_max_angle,
 			constraint_enabled, constraint_localspace, constraint_inverted

@@ -29,7 +29,8 @@ var is_pose_modified: bool = false:
 		is_pose_modified = m
 		_calculate_length_and_angle()
 
-var _pose_cache: Transform2D
+# Default value is important because gives you a cache at scene start.
+var _pose_cache: Transform2D = transform
 
 # The fist child bone is used to calculate length and angle,
 # so we need to listen for transform changes to update this values.
@@ -56,13 +57,6 @@ var _bone_outline_shapes: Array[Polygon2D] = []
 func _ready() -> void:
 	set_notify_transform(true)
 	set_notify_local_transform(true)
-
-
-func _process(_delta: float) -> void:
-	#cache_pose()
-	#_calculate_length_and_angle()
-	#_update_shapes()
-	pass
 
 
 func _notification(what: int) -> void:
