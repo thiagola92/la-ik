@@ -12,7 +12,6 @@ extends LaIK
 		bone = b
 		_start_listen_bone()
 		queue_redraw()
-		print("bone changed")
 
 ## The node which [member bone] will look at.
 @export var target: Node2D
@@ -42,13 +41,13 @@ extends LaIK
 
 func _draw() -> void:
 	if constraint_visible:
+		#print("Redrawing look at")
 		_draw_angle_constraints(
 			bone, constraint_min_angle, constraint_max_angle,
 			constraint_enabled, constraint_localspace, constraint_inverted
 		)
 
 
-# ADD HERE WHEN CHILD IS REMOVED TO ALSO CLEAR CANVAS
 func _start_listen_bone() -> void:
 	if not bone:
 		return
@@ -58,13 +57,6 @@ func _start_listen_bone() -> void:
 	if not bone.child_order_changed.is_connected(queue_redraw):
 		bone.child_order_changed.connect(queue_redraw)
 	
-	# In case the first child bone change,
-	# we need disconnect from the old and connect to the new.
-	if not bone.child_order_changed.is_connected(_stop_listen_child_bone):
-		bone.child_order_changed.connect(_stop_listen_child_bone)
-	if not bone.child_order_changed.is_connected(_start_listen_child_bone):
-		bone.child_order_changed.connect(_start_listen_child_bone)
-	
 	# If the bone move, we need to redraw the constraints position.
 	if not bone.transform_changed.is_connected(queue_redraw):
 		bone.transform_changed.connect(queue_redraw)
@@ -73,21 +65,19 @@ func _start_listen_bone() -> void:
 	if not bone.tree_exiting.is_connected(_forget_bone):
 		bone.tree_exiting.connect(_forget_bone)
 	
-	_start_listen_child_bone()
+	# Update contraint in case child bone move.
+	bone.child_bone_changing.connect(_listen_child_bone_changes)
+	_listen_child_bone_changes(null, bone.get_child_bone())
 
 
-func _start_listen_child_bone() -> void:
-	if not bone:
-		return
+func _listen_child_bone_changes(previous_child_bone: LaBone, current_child_bone: LaBone) -> void:
+	if previous_child_bone:
+		if previous_child_bone.transform_changed.is_connected(queue_redraw):
+			previous_child_bone.transform_changed.disconnect(queue_redraw)
 	
-	var child_bone: LaBone = bone.get_child_bone()
-	
-	if not child_bone:
-		return
-	
-	# If first child bone move, we need to increase/decrese the contraint radius.
-	if not child_bone.transform_changed.is_connected(queue_redraw):
-		child_bone.transform_changed.connect(queue_redraw)
+	if current_child_bone:
+		if not current_child_bone.transform_changed.is_connected(queue_redraw):
+			current_child_bone.transform_changed.connect(queue_redraw)
 
 
 # TODO: Make able to undo/redo/do, use EditorUndoRedoManager (EditorPlugin.get_undo_redo())
@@ -102,29 +92,14 @@ func _stop_listen_bone() -> void:
 	if bone.child_order_changed.is_connected(queue_redraw):
 		bone.child_order_changed.disconnect(queue_redraw)
 	
-	if bone.child_order_changed.is_connected(_stop_listen_child_bone):
-		bone.child_order_changed.disconnect(_stop_listen_child_bone)
-	
 	if bone.transform_changed.is_connected(queue_redraw):
 		bone.transform_changed.disconnect(queue_redraw)
 	
 	if bone.tree_exiting.is_connected(_forget_bone):
 		bone.tree_exiting.disconnect(_forget_bone)
 	
-	_stop_listen_child_bone()
-
-
-func _stop_listen_child_bone() -> void:
-	if not bone:
-		return
-	
-	var child_bone: LaBone = bone.get_child_bone()
-	
-	if not child_bone:
-		return
-	
-	if child_bone.transform_changed.is_connected(queue_redraw):
-		child_bone.transform_changed.disconnect(queue_redraw)
+	if bone.child_bone_changing.is_connected(_listen_child_bone_changes):
+		bone.child_bone_changing.disconnect(_listen_child_bone_changes)
 
 
 func _undo_modifications() -> void:

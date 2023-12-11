@@ -6,6 +6,8 @@ extends Node2D
 
 signal transform_changed
 
+signal child_bone_changing(previous: LaBone, current: LaBone)
+
 ## Show bone shapes.[br][br]
 ## Each bone can have multiple diamond shapes, this will show/hide every shape from this bone.
 @export var show_bone: bool = true
@@ -29,6 +31,19 @@ var is_pose_modified: bool = false:
 
 var _pose_cache: Transform2D
 
+# The fist child bone is used to calculate length and angle,
+# so we need to listen for transform changes to update this values.
+# Also useful to notify IK nodes that it change, so they can redraw contraints.
+var _child_bone: LaBone:
+	set(b):
+		if b == _child_bone:
+			return
+		
+		child_bone_changing.emit(_child_bone, b)
+		_stop_listen_child_bone()
+		_child_bone = b
+		_start_listen_child_bone()
+
 var _calculated_bone_length: float = 16
 var _calculated_bone_angle: float = 0
 
@@ -39,15 +54,15 @@ var _bone_outline_shapes: Array[Polygon2D] = []
 
 
 func _ready() -> void:
-	_start_listen_child_bone()
 	set_notify_transform(true)
 	set_notify_local_transform(true)
 
 
 func _process(_delta: float) -> void:
-	cache_pose()
-	_calculate_length_and_angle()
-	_update_shapes()
+	#cache_pose()
+	#_calculate_length_and_angle()
+	#_update_shapes()
+	pass
 
 
 func _notification(what: int) -> void:
@@ -55,11 +70,13 @@ func _notification(what: int) -> void:
 		NOTIFICATION_EDITOR_PRE_SAVE:
 			restore_pose()
 		NOTIFICATION_TRANSFORM_CHANGED, NOTIFICATION_LOCAL_TRANSFORM_CHANGED:
+			cache_pose()
+			_update_shapes()
 			transform_changed.emit()
 		NOTIFICATION_CHILD_ORDER_CHANGED:
+			_child_bone = get_child_bone()
 			_calculate_length_and_angle()
-			_stop_listen_child_bone()
-			_start_listen_child_bone()
+			_update_shapes()
 
 
 func get_bone_angle() -> float:
@@ -104,15 +121,13 @@ func _calculate_length_and_angle() -> void:
 	if not autocalculate_length_and_angle:
 		return
 	
-	# Don't calculate with modified values.
+	# Calculating while modifying can cause unexpected behaviors.
 	if is_pose_modified:
 		return
 	
-	var child_bone = get_child_bone()
-	
-	if child_bone:
+	if _child_bone:
 		# Using to_local() because CanvasItem.top_level could be checked.
-		var child_local_pos: Vector2 = to_local(child_bone.global_position)
+		var child_local_pos: Vector2 = to_local(_child_bone.global_position)
 		_calculated_bone_length = child_local_pos.length()
 		_calculated_bone_angle = child_local_pos.angle()
 	else:
@@ -121,30 +136,32 @@ func _calculate_length_and_angle() -> void:
 
 
 func _start_listen_child_bone() -> void:
-	var child_bone: LaBone = get_child_bone()
-	
-	if not child_bone:
+	if not _child_bone:
 		return
 	
 	# If the first child bone move, we need to recalculate length and angle.
-	if not child_bone.transform_changed.is_connected(_calculate_length_and_angle):
-		child_bone.transform_changed.connect(_calculate_length_and_angle)
+	if not _child_bone.transform_changed.is_connected(_calculate_length_and_angle):
+		_child_bone.transform_changed.connect(_calculate_length_and_angle)
 
 
 func _stop_listen_child_bone() -> void:
-	var child_bone: LaBone = get_child_bone()
-	
-	if not child_bone:
+	if not _child_bone:
 		return
 	
-	if child_bone.transform_changed.is_connected(_calculate_length_and_angle):
-		child_bone.transform_changed.disconnect(_calculate_length_and_angle)
+	if _child_bone.transform_changed.is_connected(_calculate_length_and_angle):
+		_child_bone.transform_changed.disconnect(_calculate_length_and_angle)
 
 
 func _update_shapes() -> void:
 	_update_shapes_quantity()
 	
 	for i in _bone_shapes.size():
+		# Before this node free itself, it needs to free it children.
+		# So there is a chance that the child doesn't exist anymore and
+		# the array is holding a <Freed Object>.
+		if _bone_shapes[i] == null or _bone_outline_shapes[i] == null:
+			return
+		
 		_update_shape(_bone_shapes[i], _bone_outline_shapes[i], get_child_bone(i))
 		_update_shape_color(_bone_shapes[i], _bone_outline_shapes[i])
 

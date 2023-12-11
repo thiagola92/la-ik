@@ -6,17 +6,17 @@ extends LaIK
 @export var bone_one: LaBone:
 	set(b):
 		_undo_modifications()
-		_stop_listen_bones()
+		_stop_listen_bone(bone_one)
 		bone_one = b
-		_start_listen_bones()
+		_start_listen_bone(bone_one)
 		queue_redraw()
 
 @export var bone_two: LaBone:
 	set(b):
 		_undo_modifications()
-		_stop_listen_bones()
+		_stop_listen_bone(bone_two)
 		bone_two = b
-		_start_listen_bones()
+		_start_listen_bone(bone_two)
 		queue_redraw()
 
 @export var target: Node2D
@@ -53,24 +53,67 @@ func _draw() -> void:
 	_draw_gizmo()
 
 
-func _start_listen_bones() -> void:
-	if bone_one:
-		if not bone_one.transform_changed.is_connected(queue_redraw):
-			bone_one.transform_changed.connect(queue_redraw)
+func _start_listen_bone(bone: LaBone) -> void:
+	if not bone:
+		return
 	
-	if bone_two:
-		if not bone_two.transform_changed.is_connected(queue_redraw):
-			bone_two.transform_changed.connect(queue_redraw)
+	printt("Start listen to bone", bone.name)
+	
+	# The first child bone is used to know where the bone is looking at,
+	# so we need to listen if the first child bone change.
+	if not bone.child_order_changed.is_connected(queue_redraw):
+		bone.child_order_changed.connect(queue_redraw)
+	
+	# If any bone move, we need to redraw the constraints position.
+	if not bone.transform_changed.is_connected(queue_redraw):
+		bone.transform_changed.connect(queue_redraw)
+	
+	# Erase the constraint draw by setting bone to null.
+	if not bone.tree_exiting.is_connected(_forget_bone.bind(bone)):
+		bone.tree_exiting.connect(_forget_bone.bind(bone))
+	
+	# Update contraint in case child bone move.
+	bone.child_bone_changing.connect(_listen_child_bone_changes)
+	_listen_child_bone_changes(null, bone.get_child_bone())
 
 
-func _stop_listen_bones() -> void:
-	if bone_one:
-		if bone_one.transform_changed.is_connected(queue_redraw):
-			bone_one.transform_changed.disconnect(queue_redraw)
+func _listen_child_bone_changes(previous_child_bone: LaBone, current_child_bone: LaBone) -> void:
+	printt("Stop listening child bone", previous_child_bone, "and start listening to", current_child_bone)
 	
-	if bone_two:
-		if bone_two.transform_changed.is_connected(queue_redraw):
-			bone_two.transform_changed.disconnect(queue_redraw)
+	if previous_child_bone:
+		if previous_child_bone.transform_changed.is_connected(queue_redraw):
+			previous_child_bone.transform_changed.disconnect(queue_redraw)
+	
+	if current_child_bone:
+		if not current_child_bone.transform_changed.is_connected(queue_redraw):
+			current_child_bone.transform_changed.connect(queue_redraw)
+
+
+# TODO: Make able to undo/redo/do, use EditorUndoRedoManager (EditorPlugin.get_undo_redo())
+func _forget_bone(bone: LaBone) -> void:
+	if bone == bone_one:
+		bone_one = null
+	elif bone == bone_two:
+		bone_two = null
+
+
+func _stop_listen_bone(bone: LaBone) -> void:
+	if not bone:
+		return
+	
+	printt("Stop listen to bone", bone.name)
+	
+	if bone.child_order_changed.is_connected(queue_redraw):
+		bone.child_order_changed.disconnect(queue_redraw)
+	
+	if bone.transform_changed.is_connected(queue_redraw):
+		bone.transform_changed.disconnect(queue_redraw)
+	
+	if bone.tree_exiting.is_connected(_forget_bone.bind(bone)):
+		bone.tree_exiting.disconnect(_forget_bone.bind(bone))
+	
+	if bone.child_bone_changing.is_connected(_listen_child_bone_changes):
+		bone.child_bone_changing.disconnect(_listen_child_bone_changes)
 
 
 func _undo_modifications() -> void:

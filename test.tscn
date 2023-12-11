@@ -1,37 +1,24 @@
-[gd_scene load_steps=4 format=3 uid="uid://ddk88xfd1v1jr"]
+[gd_scene load_steps=3 format=3 uid="uid://ddk88xfd1v1jr"]
 
 [ext_resource type="Script" path="res://la_bone/la_bone.gd" id="1_ww7yh"]
-[ext_resource type="Script" path="res://la_ik_look_at/la_ik_look_at.gd" id="2_gwxny"]
-[ext_resource type="Script" path="res://la_ik_two_bone/la_ik_two_bone.gd" id="3_mlw6q"]
+[ext_resource type="Script" path="res://la_ik_look_at/la_ik_look_at.gd" id="2_y6n5u"]
 
 [node name="Test" type="Node2D"]
+scale = Vector2(2, 1)
 
 [node name="AimLook" type="Marker2D" parent="."]
-position = Vector2(150, 25)
+position = Vector2(97.5, 0)
 
-[node name="AimTwo" type="Marker2D" parent="."]
-position = Vector2(61, -37)
-
-[node name="LaBone" type="Node2D" parent="."]
+[node name="Main" type="Node2D" parent="."]
 script = ExtResource("1_ww7yh")
 
-[node name="LaBone" type="Node2D" parent="LaBone"]
-position = Vector2(0, -55)
-script = ExtResource("1_ww7yh")
-bone_length = 60.0
-
-[node name="LaBone2" type="Node2D" parent="LaBone"]
-position = Vector2(41, 0)
+[node name="BoneLookings" type="Node2D" parent="Main"]
+position = Vector2(50, 0)
 script = ExtResource("1_ww7yh")
 
 [node name="LaIKLookAt" type="Node2D" parent="." node_paths=PackedStringArray("bone", "target")]
-script = ExtResource("2_gwxny")
-bone = NodePath("../LaBone/LaBone2")
+scale = Vector2(0.5, 1)
+script = ExtResource("2_y6n5u")
+bone = NodePath("../Main")
 target = NodePath("../AimLook")
-
-[node name="LaIKTwoBone" type="Node2D" parent="." node_paths=PackedStringArray("bone_one", "bone_two", "target")]
-script = ExtResource("3_mlw6q")
-bone_one = NodePath("../LaBone")
-bone_two = NodePath("../LaBone/LaBone")
-target = NodePath("../AimTwo")
 enabled = false

@@ -10,8 +10,12 @@ enum ExecutionMode {
 	PHYISIC_PROCESS,
 }
 
-## Enable/disable inverse kinematic over bones.[br][br]
-## When enabled, bones will [b]not[/b] store changes and will have the transform restore when disabled.
+## Enable/disable inverse kinematic over bones.[br]
+## [br]
+## When enabled, bones will [b]not[/b] store changes and will have the transform restore when disabled.[br]
+## [br]
+## [b]Note[/b]: While you can move child bones that are not target of inverse kinematic,
+## this can bring unexpected behaviors because bones may use child bones to calculate their length and angle.
 @export var enabled: bool = true:
 	set(e):
 		enabled = e
