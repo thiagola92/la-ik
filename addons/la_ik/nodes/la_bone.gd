@@ -91,6 +91,20 @@ func _notification(what: int) -> void:
 			_update_shapes()
 
 
+func _get_property_list() -> Array[Dictionary]:
+	return [{
+		"name": "_calculated_bone_length",
+		"type": TYPE_FLOAT,
+		"usage": PROPERTY_USAGE_READ_ONLY | PROPERTY_USAGE_EDITOR,
+		"hint": PROPERTY_HINT_NONE,
+	}, {
+		"name": "_calculated_bone_angle",
+		"type": TYPE_FLOAT,
+		"usage": PROPERTY_USAGE_READ_ONLY | PROPERTY_USAGE_EDITOR,
+		"hint": PROPERTY_HINT_NONE,
+	}]
+
+
 func get_bone_angle() -> float:
 	if autocalculate_length_and_angle:
 		return _calculated_bone_angle
@@ -181,6 +195,12 @@ func _stop_listen_child_bone(child_bone: LaBone) -> void:
 
 
 func _update_shapes() -> void:
+	if not _bone_shape:
+		return
+	
+	if not _bone_outline_shape:
+		return
+	
 	_update_shapes_quantity()
 	
 	for i in _bone_shapes.size():
@@ -192,6 +212,9 @@ func _update_shapes() -> void:
 		
 		_update_shape(_bone_shapes[i], _bone_outline_shapes[i], get_child_bone(i))
 		_update_shape_color(_bone_shapes[i], _bone_outline_shapes[i])
+	
+	_bone_shape.visible = not autocalculate_length_and_angle or _bone_shapes.size() == 0
+	_bone_outline_shape.visible = not autocalculate_length_and_angle or _bone_shapes.size() == 0
 	
 	_update_shape(_bone_shape, _bone_outline_shape, null)
 	_update_shape_color(_bone_shape, _bone_outline_shape)

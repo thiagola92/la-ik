@@ -115,6 +115,9 @@ func _draw_angle_constraints(
 		max_bound = min_bound
 		min_bound = temporary
 	
+	min_bound += main_bone.get_bone_angle()
+	max_bound += main_bone.get_bone_angle()
+	
 	var editor_settings = EditorInterface.get_editor_settings()
 	var bone_ik_color: Color = editor_settings.get_setting("editors/2d/bone_ik_color")
 	

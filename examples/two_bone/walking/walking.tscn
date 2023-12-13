@@ -209,7 +209,7 @@ remote_path = NodePath("../../../../../../Sprites/FootL")
 [node name="Targets" type="Node2D" parent="."]
 
 [node name="Head" type="Marker2D" parent="Targets"]
-position = Vector2(351, -217)
+position = Vector2(427, -207)
 
 [node name="IK" type="Node2D" parent="."]
 
@@ -217,6 +217,7 @@ position = Vector2(351, -217)
 script = ExtResource("16_216fy")
 bone = NodePath("../../Skeleton/Hip/Body/Head")
 target = NodePath("../../Targets/Head")
-constraint_max_angle = 3.14159
+constraint_enabled = true
+constraint_min_angle = -0.785398
+constraint_max_angle = 0.785398
 constraint_inverted = true
-enabled = false
