@@ -122,6 +122,7 @@ func _apply_modifications(_delta: float) -> void:
 	# Get angle to target and remove any rotation given to the bone so it really points to the target.
 	# In case you don't want it to point to the target, use additional_rotation.
 	var angle_to_target: float = bone.get_angle_to(target.global_position)
+	#printt(rad_to_deg(angle_to_target), rad_to_deg(bone.get_bone_angle()))
 	angle_to_target -= bone.get_bone_angle()
 	angle_to_target += additional_rotation
 	

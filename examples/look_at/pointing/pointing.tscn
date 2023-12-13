@@ -1,0 +1,105 @@
+[gd_scene load_steps=6 format=3 uid="uid://dnp7u8mf00rxl"]
+
+[ext_resource type="Script" path="res://examples/look_at/pointing/pointing.gd" id="1_14rc8"]
+[ext_resource type="Texture2D" uid="uid://byc734tgume6q" path="res://examples/look_at/pointing/texture.tres" id="1_64i3o"]
+[ext_resource type="Script" path="res://addons/la_ik/nodes/la_bone.gd" id="1_bseh5"]
+[ext_resource type="Script" path="res://addons/la_ik/nodes/la_ik_look_at.gd" id="4_lgwqs"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_3mapd"]
+
+[node name="Pointing" type="Node2D" node_paths=PackedStringArray("skeleton", "target", "ik")]
+script = ExtResource("1_14rc8")
+skeleton = NodePath("Skeleton")
+target = NodePath("Target")
+ik = NodePath("LaIKLookAt")
+
+[node name="Skeleton" type="Node2D" parent="."]
+
+[node name="Bone" type="Node2D" parent="Skeleton"]
+script = ExtResource("1_bseh5")
+
+[node name="Image" type="Node2D" parent="Skeleton/Bone"]
+rotation = 3.14159
+scale = Vector2(0.455, 0.455)
+
+[node name="Arm" type="MeshInstance2D" parent="Skeleton/Bone/Image"]
+position = Vector2(-86, 1)
+scale = Vector2(224.364, 83.1768)
+mesh = SubResource("SphereMesh_3mapd")
+texture = ExtResource("1_64i3o")
+
+[node name="Palm" type="MeshInstance2D" parent="Skeleton/Bone/Image"]
+position = Vector2(-200, -1.33871)
+scale = Vector2(91.3226, 91.3226)
+mesh = SubResource("SphereMesh_3mapd")
+texture = ExtResource("1_64i3o")
+
+[node name="Finger1" type="MeshInstance2D" parent="Skeleton/Bone/Image"]
+position = Vector2(-227.28, -19.5887)
+scale = Vector2(54.5, 54.5)
+mesh = SubResource("SphereMesh_3mapd")
+texture = ExtResource("1_64i3o")
+
+[node name="Finger2" type="MeshInstance2D" parent="Skeleton/Bone/Image"]
+position = Vector2(-226, -6.33871)
+scale = Vector2(54.5, 54.5)
+mesh = SubResource("SphereMesh_3mapd")
+texture = ExtResource("1_64i3o")
+
+[node name="Finger3" type="MeshInstance2D" parent="Skeleton/Bone/Image"]
+position = Vector2(-248.89, 7.66129)
+scale = Vector2(106.34, 54.5)
+mesh = SubResource("SphereMesh_3mapd")
+texture = ExtResource("1_64i3o")
+
+[node name="Target" type="Marker2D" parent="."]
+position = Vector2(377, 0)
+
+[node name="LaIKLookAt" type="Node2D" parent="." node_paths=PackedStringArray("bone", "target")]
+script = ExtResource("4_lgwqs")
+bone = NodePath("../Skeleton/Bone")
+target = NodePath("../Target")
+
+[node name="Camera2D" type="Camera2D" parent="."]
+
+[node name="CanvasLayer" type="CanvasLayer" parent="."]
+
+[node name="FlipButton" type="Button" parent="CanvasLayer"]
+offset_right = 65.0
+offset_bottom = 31.0
+text = "Flip me"
+
+[node name="NoContraintButton" type="Button" parent="CanvasLayer"]
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -57.0
+offset_right = 57.0
+offset_bottom = 31.0
+grow_horizontal = 2
+text = "No constraint"
+
+[node name="OnlyPointForwardButton" type="Button" parent="CanvasLayer"]
+anchors_preset = 4
+anchor_top = 0.5
+anchor_bottom = 0.5
+offset_top = -15.5
+offset_right = 177.0
+offset_bottom = 15.5
+grow_vertical = 2
+text = "Only point forward"
+
+[node name="MoveButton" type="Button" parent="CanvasLayer"]
+anchors_preset = 2
+anchor_top = 1.0
+anchor_bottom = 1.0
+offset_top = -31.0
+offset_right = 51.0
+grow_vertical = 0
+text = "Move
+"
+
+[connection signal="pressed" from="CanvasLayer/FlipButton" to="." method="_on_flip_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/NoContraintButton" to="." method="_on_no_contraint_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/OnlyPointForwardButton" to="." method="_on_no_pointing_behinds_pressed"]
+[connection signal="pressed" from="CanvasLayer/MoveButton" to="." method="_on_move_button_pressed"]

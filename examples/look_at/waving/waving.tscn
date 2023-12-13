@@ -1,0 +1,122 @@
+[gd_scene load_steps=8 format=3 uid="uid://5l68hjbh20fw"]
+
+[ext_resource type="Script" path="res://addons/la_ik/nodes/la_bone.gd" id="1_bun3c"]
+[ext_resource type="Texture2D" uid="uid://byc734tgume6q" path="res://examples/look_at/pointing/texture.tres" id="1_w0fee"]
+[ext_resource type="Script" path="res://addons/la_ik/nodes/la_ik_look_at.gd" id="3_jh1c4"]
+
+[sub_resource type="SphereMesh" id="SphereMesh_fgiv2"]
+
+[sub_resource type="Animation" id="Animation_o526a"]
+length = 2.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Marker2D:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector2(578, 54)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Marker2D:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [0.0]
+}
+
+[sub_resource type="Animation" id="Animation_umg6b"]
+resource_name = "WAVE"
+length = 0.5
+loop_mode = 2
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Marker2D:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector2(500, 50), Vector2(660, 50)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Marker2D:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [0.0, 0.0]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_mp8l0"]
+_data = {
+"RESET": SubResource("Animation_o526a"),
+"WAVE": SubResource("Animation_umg6b")
+}
+
+[node name="Waving" type="Node2D"]
+
+[node name="Skeleton" type="Node2D" parent="."]
+position = Vector2(578, 301)
+
+[node name="LaBone" type="Node2D" parent="Skeleton"]
+script = ExtResource("1_bun3c")
+bone_angle = -1.5708
+
+[node name="Finger" type="MeshInstance2D" parent="Skeleton/LaBone"]
+position = Vector2(-27, -41)
+scale = Vector2(29.7364, 83.5)
+mesh = SubResource("SphereMesh_fgiv2")
+texture = ExtResource("1_w0fee")
+
+[node name="Finger2" type="MeshInstance2D" parent="Skeleton/LaBone"]
+position = Vector2(7, -49)
+scale = Vector2(29.7364, 83.5)
+mesh = SubResource("SphereMesh_fgiv2")
+texture = ExtResource("1_w0fee")
+
+[node name="Finger3" type="MeshInstance2D" parent="Skeleton/LaBone"]
+position = Vector2(39, -30)
+rotation = 0.147568
+scale = Vector2(29.7364, 83.5)
+mesh = SubResource("SphereMesh_fgiv2")
+texture = ExtResource("1_w0fee")
+
+[node name="Finger4" type="MeshInstance2D" parent="Skeleton/LaBone"]
+position = Vector2(-57.5743, 0.875)
+scale = Vector2(54.9135, 33.75)
+mesh = SubResource("SphereMesh_fgiv2")
+texture = ExtResource("1_w0fee")
+
+[node name="Palm" type="MeshInstance2D" parent="Skeleton/LaBone"]
+scale = Vector2(83.5, 83.5)
+mesh = SubResource("SphereMesh_fgiv2")
+texture = ExtResource("1_w0fee")
+
+[node name="Marker2D" type="Marker2D" parent="."]
+position = Vector2(578, 54)
+
+[node name="LaIKLookAt" type="Node2D" parent="." node_paths=PackedStringArray("bone", "target")]
+script = ExtResource("3_jh1c4")
+bone = NodePath("../Skeleton/LaBone")
+target = NodePath("../Marker2D")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_mp8l0")
+}
+autoplay = "WAVE"

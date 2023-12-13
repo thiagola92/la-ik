@@ -1,0 +1,222 @@
+[gd_scene load_steps=17 format=3 uid="uid://bymlgirqr3x4y"]
+
+[ext_resource type="Texture2D" uid="uid://iicu06rc6eqb" path="res://examples/two_bone/walking/gbot/gBot_arm_l.png" id="1_7vcdq"]
+[ext_resource type="Texture2D" uid="uid://bg21huvgqlqi8" path="res://examples/two_bone/walking/gbot/gBot_arm_r.png" id="2_vcojo"]
+[ext_resource type="Texture2D" uid="uid://b3vaf6c0dtmbf" path="res://examples/two_bone/walking/gbot/gBot_body.png" id="3_g3v2r"]
+[ext_resource type="Texture2D" uid="uid://b53m7btv8710o" path="res://examples/two_bone/walking/gbot/gBot_foot_l.png" id="4_adiox"]
+[ext_resource type="Texture2D" uid="uid://b0h7gxkunyau0" path="res://examples/two_bone/walking/gbot/gBot_foot_r.png" id="5_evpt0"]
+[ext_resource type="Texture2D" uid="uid://dhy4fjet2q5cw" path="res://examples/two_bone/walking/gbot/gBot_forearm_l.png" id="6_k8eto"]
+[ext_resource type="Texture2D" uid="uid://ubn5jlljf8mk" path="res://examples/two_bone/walking/gbot/gBot_forearm_r.png" id="7_sj2jv"]
+[ext_resource type="Texture2D" uid="uid://dctxnvb5sttl1" path="res://examples/two_bone/walking/gbot/gBot_head.png" id="8_qykvt"]
+[ext_resource type="Texture2D" uid="uid://b052dnml0x472" path="res://examples/two_bone/walking/gbot/gBot_hip.png" id="9_kri68"]
+[ext_resource type="Texture2D" uid="uid://c22khm8416sri" path="res://examples/two_bone/walking/gbot/gBot_jaw.png" id="10_rfc50"]
+[ext_resource type="Texture2D" uid="uid://de2n14ceehhis" path="res://examples/two_bone/walking/gbot/gBot_leg_l.png" id="11_dsccs"]
+[ext_resource type="Texture2D" uid="uid://ctn2fvc61u45x" path="res://examples/two_bone/walking/gbot/gBot_leg_r.png" id="12_8jb6l"]
+[ext_resource type="Texture2D" uid="uid://dk3txwjee0ldj" path="res://examples/two_bone/walking/gbot/gBot_shin_l.png" id="13_tsy7o"]
+[ext_resource type="Texture2D" uid="uid://dltygpoht7hhl" path="res://examples/two_bone/walking/gbot/gBot_shin_r.png" id="14_g8h8o"]
+[ext_resource type="Script" path="res://addons/la_ik/nodes/la_bone.gd" id="15_b2ktm"]
+[ext_resource type="Script" path="res://addons/la_ik/nodes/la_ik_look_at.gd" id="16_216fy"]
+
+[node name="Walking" type="Node2D"]
+
+[node name="Sprites" type="Node2D" parent="."]
+
+[node name="ArmL" type="Sprite2D" parent="Sprites"]
+position = Vector2(78, -173)
+texture = ExtResource("1_7vcdq")
+offset = Vector2(0, 50)
+
+[node name="ForearmL" type="Sprite2D" parent="Sprites"]
+position = Vector2(90, -67)
+texture = ExtResource("6_k8eto")
+offset = Vector2(0, 75)
+
+[node name="LegL" type="Sprite2D" parent="Sprites"]
+position = Vector2(30, 0)
+texture = ExtResource("11_dsccs")
+offset = Vector2(0, 50)
+
+[node name="ShinL" type="Sprite2D" parent="Sprites"]
+position = Vector2(7, 89)
+texture = ExtResource("13_tsy7o")
+offset = Vector2(30, 50)
+
+[node name="FootL" type="Sprite2D" parent="Sprites"]
+position = Vector2(7, 208)
+texture = ExtResource("4_adiox")
+offset = Vector2(50, 0)
+
+[node name="Hip" type="Sprite2D" parent="Sprites"]
+texture = ExtResource("9_kri68")
+
+[node name="Body" type="Sprite2D" parent="Sprites"]
+position = Vector2(0, -36)
+texture = ExtResource("3_g3v2r")
+offset = Vector2(0, -100)
+
+[node name="Head" type="Sprite2D" parent="Sprites"]
+position = Vector2(28, -376)
+texture = ExtResource("8_qykvt")
+
+[node name="Jaw" type="Sprite2D" parent="Sprites"]
+position = Vector2(-60, -235)
+texture = ExtResource("10_rfc50")
+offset = Vector2(100, 0)
+
+[node name="LegR" type="Sprite2D" parent="Sprites"]
+position = Vector2(-67, 2)
+texture = ExtResource("12_8jb6l")
+offset = Vector2(0, 50)
+
+[node name="ShinR" type="Sprite2D" parent="Sprites"]
+position = Vector2(-92, 96)
+texture = ExtResource("14_g8h8o")
+offset = Vector2(30, 50)
+
+[node name="FootR" type="Sprite2D" parent="Sprites"]
+position = Vector2(-101, 212)
+texture = ExtResource("5_evpt0")
+offset = Vector2(50, 0)
+
+[node name="ArmR" type="Sprite2D" parent="Sprites"]
+position = Vector2(-46, -173)
+texture = ExtResource("2_vcojo")
+offset = Vector2(0, 50)
+
+[node name="ForearmR" type="Sprite2D" parent="Sprites"]
+position = Vector2(-49, -64)
+texture = ExtResource("7_sj2jv")
+offset = Vector2(0, 75)
+
+[node name="Skeleton" type="Node2D" parent="."]
+
+[node name="Hip" type="Node2D" parent="Skeleton"]
+script = ExtResource("15_b2ktm")
+
+[node name="Body" type="Node2D" parent="Skeleton/Hip"]
+position = Vector2(0, -36)
+script = ExtResource("15_b2ktm")
+
+[node name="RemoteTransform2D" type="RemoteTransform2D" parent="Skeleton/Hip/Body"]
+remote_path = NodePath("../../../../Sprites/Body")
+
+[node name="Head" type="Node2D" parent="Skeleton/Hip/Body"]
+position = Vector2(0, -171)
+script = ExtResource("15_b2ktm")
+autocalculate_length_and_angle = false
+
+[node name="RemoteTransform2D" type="RemoteTransform2D" parent="Skeleton/Hip/Body/Head"]
+position = Vector2(28, -169)
+remote_path = NodePath("../../../../../Sprites/Head")
+
+[node name="Jaw" type="Node2D" parent="Skeleton/Hip/Body/Head"]
+position = Vector2(-60, -28)
+script = ExtResource("15_b2ktm")
+autocalculate_length_and_angle = false
+bone_length = 150.0
+
+[node name="RemoteTransform2D" type="RemoteTransform2D" parent="Skeleton/Hip/Body/Head/Jaw"]
+remote_path = NodePath("../../../../../../Sprites/Jaw")
+
+[node name="ArmR" type="Node2D" parent="Skeleton/Hip/Body"]
+position = Vector2(-43, -123)
+script = ExtResource("15_b2ktm")
+
+[node name="RemoteTransform2D" type="RemoteTransform2D" parent="Skeleton/Hip/Body/ArmR"]
+position = Vector2(-3, -14)
+remote_path = NodePath("../../../../../Sprites/ArmR")
+
+[node name="ForearmR" type="Node2D" parent="Skeleton/Hip/Body/ArmR"]
+position = Vector2(-27, 116)
+script = ExtResource("15_b2ktm")
+autocalculate_length_and_angle = false
+bone_length = 150.0
+bone_angle = 1.39626
+
+[node name="RemoteTransform2D" type="RemoteTransform2D" parent="Skeleton/Hip/Body/ArmR/ForearmR"]
+position = Vector2(21, -21)
+remote_path = NodePath("../../../../../../Sprites/ForearmR")
+
+[node name="ArmL" type="Node2D" parent="Skeleton/Hip/Body"]
+position = Vector2(78, -120)
+script = ExtResource("15_b2ktm")
+
+[node name="RemoteTransform2D" type="RemoteTransform2D" parent="Skeleton/Hip/Body/ArmL"]
+position = Vector2(0, -17)
+remote_path = NodePath("../../../../../Sprites/ArmL")
+
+[node name="ForearmL" type="Node2D" parent="Skeleton/Hip/Body/ArmL"]
+position = Vector2(-8, 90)
+script = ExtResource("15_b2ktm")
+autocalculate_length_and_angle = false
+bone_length = 150.0
+bone_angle = 1.39626
+
+[node name="RemoteTransform2D" type="RemoteTransform2D" parent="Skeleton/Hip/Body/ArmL/ForearmL"]
+position = Vector2(20, -1)
+remote_path = NodePath("../../../../../../Sprites/ForearmL")
+
+[node name="LegR" type="Node2D" parent="Skeleton/Hip"]
+position = Vector2(-62, 7)
+script = ExtResource("15_b2ktm")
+
+[node name="RemoteTransform2D" type="RemoteTransform2D" parent="Skeleton/Hip/LegR"]
+position = Vector2(-5, -5)
+remote_path = NodePath("../../../../Sprites/LegR")
+
+[node name="ShinR" type="Node2D" parent="Skeleton/Hip/LegR"]
+position = Vector2(-14, 93)
+script = ExtResource("15_b2ktm")
+
+[node name="RemoteTransform2D" type="RemoteTransform2D" parent="Skeleton/Hip/LegR/ShinR"]
+position = Vector2(-16, -4)
+remote_path = NodePath("../../../../../Sprites/ShinR")
+
+[node name="FootR" type="Node2D" parent="Skeleton/Hip/LegR/ShinR"]
+position = Vector2(-25, 112)
+script = ExtResource("15_b2ktm")
+autocalculate_length_and_angle = false
+bone_length = 80.0
+
+[node name="RemoteTransform2D" type="RemoteTransform2D" parent="Skeleton/Hip/LegR/ShinR/FootR"]
+remote_path = NodePath("../../../../../../Sprites/FootR")
+
+[node name="LegL" type="Node2D" parent="Skeleton/Hip"]
+position = Vector2(47, 2)
+script = ExtResource("15_b2ktm")
+
+[node name="RemoteTransform2D" type="RemoteTransform2D" parent="Skeleton/Hip/LegL"]
+position = Vector2(-17, -2)
+remote_path = NodePath("../../../../Sprites/LegL")
+
+[node name="ShinL" type="Node2D" parent="Skeleton/Hip/LegL"]
+position = Vector2(-31, 88)
+script = ExtResource("15_b2ktm")
+
+[node name="RemoteTransform2D" type="RemoteTransform2D" parent="Skeleton/Hip/LegL/ShinL"]
+position = Vector2(-9, -1)
+remote_path = NodePath("../../../../../Sprites/ShinL")
+
+[node name="FootL" type="Node2D" parent="Skeleton/Hip/LegL/ShinL"]
+position = Vector2(-9, 118)
+script = ExtResource("15_b2ktm")
+autocalculate_length_and_angle = false
+bone_length = 80.0
+
+[node name="RemoteTransform2D" type="RemoteTransform2D" parent="Skeleton/Hip/LegL/ShinL/FootL"]
+remote_path = NodePath("../../../../../../Sprites/FootL")
+
+[node name="Targets" type="Node2D" parent="."]
+
+[node name="Head" type="Marker2D" parent="Targets"]
+position = Vector2(351, -217)
+
+[node name="IK" type="Node2D" parent="."]
+
+[node name="LaIKLookAt" type="Node2D" parent="IK" node_paths=PackedStringArray("bone", "target")]
+script = ExtResource("16_216fy")
+bone = NodePath("../../Skeleton/Hip/Body/Head")
+target = NodePath("../../Targets/Head")
+constraint_max_angle = 3.14159
+constraint_inverted = true
+enabled = false

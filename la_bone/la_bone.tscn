@@ -1,6 +1,0 @@
-[gd_scene load_steps=2 format=3 uid="uid://bkg75sk7yytbv"]
-
-[ext_resource type="Script" path="res://la_bone/la_bone.gd" id="1_2rg2r"]
-
-[node name="LaBone" type="Node2D"]
-script = ExtResource("1_2rg2r")

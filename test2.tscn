@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://co3d5flwpwn4v"]
 
-[ext_resource type="Script" path="res://la_bone/la_bone.gd" id="1_yvp1u"]
-[ext_resource type="Script" path="res://la_ik_two_bone/la_ik_two_bone.gd" id="2_jw1vy"]
+[ext_resource type="Script" path="res://addons/la_ik/nodes/la_bone.gd" id="1_yvp1u"]
+[ext_resource type="Script" path="res://addons/la_ik/nodes/la_ik_two_bone.gd" id="2_jw1vy"]
 
 [sub_resource type="SkeletonModification2DTwoBoneIK" id="SkeletonModification2DTwoBoneIK_g2nr3"]
 target_nodepath = NodePath("../Aim/AimTwo2")
@@ -17,6 +17,7 @@ modification_count = 1
 modifications/0 = SubResource("SkeletonModification2DTwoBoneIK_g2nr3")
 
 [node name="Test2" type="Node2D"]
+scale = Vector2(2, 1)
 
 [node name="Main" type="Node2D" parent="."]
 position = Vector2(0, -100)
@@ -31,7 +32,7 @@ position = Vector2(100, 0)
 script = ExtResource("1_yvp1u")
 
 [node name="Aim" type="Node2D" parent="."]
-position = Vector2(250, 0)
+position = Vector2(225, -1)
 
 [node name="AimTwo" type="Marker2D" parent="Aim"]
 position = Vector2(0, -100)
@@ -40,6 +41,7 @@ position = Vector2(0, -100)
 position = Vector2(0, 100)
 
 [node name="LaIKTwoBone" type="Node2D" parent="." node_paths=PackedStringArray("bone_one", "bone_two", "target")]
+scale = Vector2(0.5, 1)
 script = ExtResource("2_jw1vy")
 bone_one = NodePath("../Main")
 bone_two = NodePath("../Main/One")

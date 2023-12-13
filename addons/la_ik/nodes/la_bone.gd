@@ -1,5 +1,5 @@
 @tool
-@icon("res://icons/Bone2D.svg")
+@icon("../icons/Bone2D.svg")
 class_name LaBone
 extends Node2D
 
@@ -10,19 +10,31 @@ signal child_bone_changing(previous: LaBone, current: LaBone)
 
 ## Show bone shapes.[br][br]
 ## Each bone can have multiple diamond shapes, this will show/hide every shape from this bone.
-@export var show_bone: bool = true
+@export var show_bone: bool = true:
+	set(s):
+		show_bone = s
+		_update_shapes()
 
 ## If [code]true[/code], it will attempt to use the first child bone to discover length and angle.[br][br]
 ## In case no child bone exist, [member bone_length] and [member bone_angle] will be used.
-@export var autocalculate_length_and_angle: bool = true
+@export var autocalculate_length_and_angle: bool = true:
+	set(a):
+		autocalculate_length_and_angle = a
+		_update_shapes()
 
 @export_group("Length and Angle")
 
 ## [b]Note[/b]: Ignored in case [member autocalculate_length_and_angle] is [code]true[/code].
-@export var bone_length: float = 16
+@export var bone_length: float = 16:
+	set(l):
+		bone_length = l
+		_update_shapes()
 
 ## [b]Note[/b]: Ignored in case [member autocalculate_length_and_angle] is [code]true[/code].
-@export_range(-360, 360, 0.1, "radians_as_degrees") var bone_angle: float = 0
+@export_range(-360, 360, 0.1, "radians_as_degrees") var bone_angle: float = 0:
+	set(a):
+		bone_angle = a
+		_update_shapes()
 
 var is_pose_modified: bool = false:
 	set(m):
@@ -33,30 +45,34 @@ var is_pose_modified: bool = false:
 var _pose_cache: Transform2D = transform
 
 # The fist child bone is used to calculate length and angle,
-# so we need to listen for transform changes to update this values.
-# Also useful to notify IK nodes that it change, so they can redraw contraints.
+# so we need to notify IK nodes that it change, so they can recalculate values.
 var _child_bone: LaBone:
 	set(b):
-		if b == _child_bone:
-			return
-		
-		child_bone_changing.emit(_child_bone, b)
-		_stop_listen_child_bone()
-		_child_bone = b
-		_start_listen_child_bone()
+		if b != _child_bone:
+			child_bone_changing.emit(_child_bone, b)
+			_child_bone = b
 
 var _calculated_bone_length: float = 16
 var _calculated_bone_angle: float = 0
 
 # Each bone can have multiple shapes, each shape points to a bone child.
-# In case there is no bone child, a shape poiting to the right is generated.
 var _bone_shapes: Array[Polygon2D] = []
 var _bone_outline_shapes: Array[Polygon2D] = []
+
+# This shape appears when autocalculate_length_and_angle is false or there is no child bone.
+var _bone_shape: Polygon2D
+var _bone_outline_shape: Polygon2D
 
 
 func _ready() -> void:
 	set_notify_transform(true)
 	set_notify_local_transform(true)
+	
+	_bone_shape = _create_bone_shape()
+	_bone_outline_shape = _create_bone_outline_shape()
+	
+	add_child(_bone_shape)
+	add_child(_bone_outline_shape)
 
 
 func _notification(what: int) -> void:
@@ -65,10 +81,12 @@ func _notification(what: int) -> void:
 			restore_pose()
 		NOTIFICATION_TRANSFORM_CHANGED, NOTIFICATION_LOCAL_TRANSFORM_CHANGED:
 			cache_pose()
+			_calculate_length_and_angle()
 			_update_shapes()
 			transform_changed.emit()
 		NOTIFICATION_CHILD_ORDER_CHANGED:
 			_child_bone = get_child_bone()
+			_start_listen_child_bones()
 			_calculate_length_and_angle()
 			_update_shapes()
 
@@ -120,30 +138,46 @@ func _calculate_length_and_angle() -> void:
 		return
 	
 	if _child_bone:
-		# Using to_local() because CanvasItem.top_level could be checked.
-		var child_local_pos: Vector2 = to_local(_child_bone.global_position)
-		_calculated_bone_length = child_local_pos.length()
-		_calculated_bone_angle = child_local_pos.angle()
+		# This will take scale in count, which is good because you get the right length
+		# even when only one axis is scaled.
+		_calculated_bone_length = (_child_bone.global_position - global_position).length()
+		
+		# This will NOT take scale in count, which is good because you get the right angle
+		# even when scaling X by a negative number.
+		_calculated_bone_angle = to_local(_child_bone.global_position).angle()
 	else:
 		_calculated_bone_length = bone_length
 		_calculated_bone_angle = bone_angle
 
 
-func _start_listen_child_bone() -> void:
-	if not _child_bone:
+func _start_listen_child_bones() -> void:
+	for child_bone in get_children():
+		if child_bone is LaBone:
+			_start_listen_child_bone(child_bone)
+
+
+func _start_listen_child_bone(child_bone: LaBone) -> void:
+	if not child_bone:
 		return
 	
 	# If the first child bone move, we need to recalculate length and angle.
-	if not _child_bone.transform_changed.is_connected(_calculate_length_and_angle):
-		_child_bone.transform_changed.connect(_calculate_length_and_angle)
+	if not child_bone.transform_changed.is_connected(_calculate_length_and_angle):
+		child_bone.transform_changed.connect(_calculate_length_and_angle)
+	
+	# If the first child bone move, we need to redraw shapes.
+	if not child_bone.transform_changed.is_connected(_update_shapes):
+		child_bone.transform_changed.connect(_update_shapes)
 
 
-func _stop_listen_child_bone() -> void:
-	if not _child_bone:
+func _stop_listen_child_bone(child_bone: LaBone) -> void:
+	if not child_bone:
 		return
 	
-	if _child_bone.transform_changed.is_connected(_calculate_length_and_angle):
-		_child_bone.transform_changed.disconnect(_calculate_length_and_angle)
+	if child_bone.transform_changed.is_connected(_calculate_length_and_angle):
+		child_bone.transform_changed.disconnect(_calculate_length_and_angle)
+	
+	if child_bone.transform_changed.is_connected(_update_shapes):
+		child_bone.transform_changed.disconnect(_update_shapes)
 
 
 func _update_shapes() -> void:
@@ -158,6 +192,9 @@ func _update_shapes() -> void:
 		
 		_update_shape(_bone_shapes[i], _bone_outline_shapes[i], get_child_bone(i))
 		_update_shape_color(_bone_shapes[i], _bone_outline_shapes[i])
+	
+	_update_shape(_bone_shape, _bone_outline_shape, null)
+	_update_shape_color(_bone_shape, _bone_outline_shape)
 
 
 func _update_shapes_quantity() -> void:
@@ -170,27 +207,35 @@ func _update_shapes_quantity() -> void:
 			bones_quantity += 1
 			
 			if bones_quantity > _bone_shapes.size():
-				_add_bone_shape()
+				_increase_bone_shapes()
 	
 	# In case you need to remove some shapes to match the bones_quantity.
 	for i in (bones_quantity - _bone_shapes.size()):
-		_remove_bone_shape()
-	
-	# You should never have no shapes.
-	if _bone_shapes.size() == 0:
-		_add_bone_shape()
+		_decrease_bone_shapes()
 
 
-func _add_bone_shape() -> void:
-	var bone_shape: Polygon2D = Polygon2D.new()
-	var bone_outline_shape: Polygon2D = Polygon2D.new()
+func _increase_bone_shapes() -> void:
+	var bone_shape: Polygon2D = _create_bone_shape()
+	var bone_outline_shape: Polygon2D = _create_bone_outline_shape()
 	_bone_shapes.append(bone_shape)
 	_bone_outline_shapes.append(bone_outline_shape)
 	add_child(bone_shape)
 	add_child(bone_outline_shape)
 
 
-func _remove_bone_shape() -> void:
+func _create_bone_shape() -> Polygon2D:
+	var bone_shape: Polygon2D = Polygon2D.new()
+	bone_shape.z_index = RenderingServer.CANVAS_ITEM_Z_MAX
+	return bone_shape
+
+
+func _create_bone_outline_shape() -> Polygon2D:
+	var bone_outline_shape: Polygon2D = Polygon2D.new()
+	bone_outline_shape.z_index = RenderingServer.CANVAS_ITEM_Z_MAX
+	return bone_outline_shape
+
+
+func _decrease_bone_shapes() -> void:
 	if _bone_shapes.size() == 0:
 		return
 	
@@ -199,6 +244,12 @@ func _remove_bone_shape() -> void:
 
 
 func _update_shape(bone_shape: Polygon2D, bone_outline_shape: Polygon2D, child_bone: LaBone) -> void:
+	if not bone_shape:
+		return
+	
+	if not bone_outline_shape:
+		return
+	
 	if not EditorInterface.has_method("get_editor_settings"):
 		return
 	
@@ -244,6 +295,12 @@ func _update_shape(bone_shape: Polygon2D, bone_outline_shape: Polygon2D, child_b
 
 
 func _update_shape_color(bone_shape: Polygon2D, bone_outline_shape: Polygon2D) -> void:
+	if not bone_shape:
+		return
+	
+	if not bone_outline_shape:
+		return
+	
 	if not EditorInterface.has_method("get_editor_settings"):
 		return
 	

@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://ddk88xfd1v1jr"]
 
-[ext_resource type="Script" path="res://la_bone/la_bone.gd" id="1_ww7yh"]
-[ext_resource type="Script" path="res://la_ik_look_at/la_ik_look_at.gd" id="2_y6n5u"]
+[ext_resource type="Script" path="res://addons/la_ik/nodes/la_bone.gd" id="1_ww7yh"]
+[ext_resource type="Script" path="res://addons/la_ik/nodes/la_ik_look_at.gd" id="2_y6n5u"]
 
 [sub_resource type="SkeletonModification2DLookAt" id="SkeletonModification2DLookAt_jcx74"]
 bone_index = 0
@@ -24,13 +24,15 @@ position = Vector2(50, 0)
 script = ExtResource("1_ww7yh")
 
 [node name="LaIKLookAt" type="Node2D" parent="Main/BoneLookings" node_paths=PackedStringArray("bone", "target")]
-position = Vector2(-50, 100)
+position = Vector2(-51.2986, 99.9916)
+rotation = 0.0129863
+scale = Vector2(1, 1)
 script = ExtResource("2_y6n5u")
 bone = NodePath("../..")
 target = NodePath("../../../Aim/AimLook")
 
 [node name="Aim" type="Node2D" parent="."]
-position = Vector2(150, 0)
+position = Vector2(154, -2)
 
 [node name="AimLook" type="Marker2D" parent="Aim"]
 position = Vector2(0, -100)

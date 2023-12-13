@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://c50384gkg02cn"
-path="res://.godot/imported/Skeleton2D.svg-58aea6405fd012938a116dae37b29636.ctex"
+uid="uid://ctb58nfsi5wn6"
+path="res://.godot/imported/Bone2D.svg-cc6a46bcd3ed015e8b5a77ec2a9b0ceb.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://icons/Skeleton2D.svg"
-dest_files=["res://.godot/imported/Skeleton2D.svg-58aea6405fd012938a116dae37b29636.ctex"]
+source_file="res://addons/la_ik/icons/Bone2D.svg"
+dest_files=["res://.godot/imported/Bone2D.svg-cc6a46bcd3ed015e8b5a77ec2a9b0ceb.ctex"]
 
 [params]
 
