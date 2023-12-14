@@ -1,6 +1,17 @@
 # la-ik
 Inverse Kinematic addon for Godot.
 
+# Installation
+- Download latest release
+- Extract `addons` directory from ZIP
+- Move `addons` directory to your project directory
+  - If your project already have an `addons` directory, copy `addons/la_ik` to your project `addons`
+- Open Godot project
+- Go to `Project > Project Settings... > Plugins`
+  - You should be seeing LaIK plugin there, otherwise something was done wrong
+- Check `Enable` in LaIK plugin
+- Restart Godot
+
 # Why
 (11-dez-2023) After a long time reading Godot inverse kinematic and trying to fix ([#83397][1], [#83330][2], [#81544][3], [#81051][4], [#81048][5]), I started questioning myself if my changes were correct ([comment][6]).  
 
