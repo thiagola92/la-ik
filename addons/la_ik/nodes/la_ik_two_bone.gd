@@ -151,11 +151,20 @@ func _apply_modifications(_delta: float) -> void:
 	var bone_two_length: float = bone_two.get_bone_length()
 	var out_of_range: bool = target_distance > bone_one_length + bone_two_length 
 	var angle_to_x_axis: float = (target.global_position - bone_one.global_position).angle()
+	var same_sign: bool = bone_one.global_scale.sign().x == bone_one.global_scale.sign().y
 	
 	# Easiest case, target is out of range.
 	if out_of_range:
-		bone_one.global_rotation = angle_to_x_axis - bone_one.get_bone_angle()
-		bone_two.global_rotation = angle_to_x_axis - bone_two.get_bone_angle()
+		# Any angle scaled by -1 will give a mirror angle in that axis,
+		# now any operation over the angle needs to flip sign to give a mirror angle.
+		# Example: (45º + 5º) is mirror to (135º - 5º)
+		if same_sign:
+			bone_one.global_rotation = angle_to_x_axis - bone_one.get_bone_angle()
+			bone_two.global_rotation = angle_to_x_axis - bone_two.get_bone_angle()
+		else:
+			bone_one.global_rotation = angle_to_x_axis + bone_one.get_bone_angle()
+			bone_two.global_rotation = angle_to_x_axis + bone_two.get_bone_angle()
+		
 		return
 	
 	var angle_0: float = acos(

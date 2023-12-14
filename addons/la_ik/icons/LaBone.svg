@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   height="16"
+   viewBox="0 0 16 16"
+   width="16"
+   version="1.1"
+   id="svg1"
+   sodipodi:docname="Bone2D.svg"
+   inkscape:version="1.3.2 (1:1.3.2+202311252150+091e20ef0f)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs1" />
+  <sodipodi:namedview
+     id="namedview1"
+     pagecolor="#ffffff"
+     bordercolor="#111111"
+     borderopacity="1"
+     inkscape:showpageshadow="0"
+     inkscape:pageopacity="0"
+     inkscape:pagecheckerboard="1"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:zoom="18.627844"
+     inkscape:cx="13.689185"
+     inkscape:cy="3.3551924"
+     inkscape:window-width="1920"
+     inkscape:window-height="1011"
+     inkscape:window-x="1920"
+     inkscape:window-y="32"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg1" />
+  <path
+     d="M4.824 8.384a2.466 2.466 0 1 0-1.705 4.496 2.466 2.466 0 1 0 4.496-1.705l3.56-3.56a2.466 2.466 0 1 0 1.705-4.496 2.466 2.466 0 1 0-4.496 1.705z"
+     fill="#8da5f3"
+     id="path1"
+     style="fill:#8da5f3;fill-opacity:1" />
+  <text
+     xml:space="preserve"
+     style="font-size:13.3333px;font-family:Ubuntu;-inkscape-font-specification:Ubuntu;text-align:center;text-anchor:middle;fill:none;stroke:#000000;stroke-width:11.3386;stroke-linecap:round;stroke-linejoin:round"
+     x="2.2450235"
+     y="7.1743588"
+     id="text1"><tspan
+       sodipodi:role="line"
+       id="tspan1"
+       x="2.2450235"
+       y="7.1743588" /></text>
+  <text
+     xml:space="preserve"
+     style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.33333px;font-family:'Noto Naskh Arabic';-inkscape-font-specification:'Noto Naskh Arabic';text-align:center;text-anchor:middle;fill:#f38da5;fill-opacity:1;stroke:#f38da5;stroke-width:0.4;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none;stroke-opacity:1"
+     x="11.410398"
+     y="14.506397"
+     id="text2"><tspan
+       sodipodi:role="line"
+       id="tspan2"
+       x="11.410398"
+       y="14.506397"
+       style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-size:5.33333px;font-family:System-ui;-inkscape-font-specification:System-ui;stroke:#f38da5;stroke-width:0.4;stroke-dasharray:none;stroke-opacity:1;fill:#f38da5;fill-opacity:1">LA</tspan></text>
+</svg>

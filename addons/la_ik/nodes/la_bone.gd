@@ -1,5 +1,5 @@
 @tool
-@icon("../icons/Bone2D.svg")
+@icon("../icons/LaBone.svg")
 class_name LaBone
 extends Node2D
 

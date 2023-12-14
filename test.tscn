@@ -32,7 +32,7 @@ constraint_min_angle = -0.785398
 constraint_max_angle = 0.785398
 
 [node name="Aim" type="Node2D" parent="."]
-position = Vector2(166, 0)
+position = Vector2(158, 0)
 
 [node name="AimLook" type="Marker2D" parent="Aim"]
 position = Vector2(0, -100)

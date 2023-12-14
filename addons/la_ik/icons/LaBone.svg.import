@@ -3,15 +3,15 @@
 importer="texture"
 type="CompressedTexture2D"
 uid="uid://ctb58nfsi5wn6"
-path="res://.godot/imported/Bone2D.svg-cc6a46bcd3ed015e8b5a77ec2a9b0ceb.ctex"
+path="res://.godot/imported/LaBone.svg-a43f90eccc5acdb32f2796e8ec930411.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://addons/la_ik/icons/Bone2D.svg"
-dest_files=["res://.godot/imported/Bone2D.svg-cc6a46bcd3ed015e8b5a77ec2a9b0ceb.ctex"]
+source_file="res://addons/la_ik/icons/LaBone.svg"
+dest_files=["res://.godot/imported/LaBone.svg-a43f90eccc5acdb32f2796e8ec930411.ctex"]
 
 [params]
 
