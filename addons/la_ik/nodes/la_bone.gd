@@ -333,6 +333,9 @@ func _update_shape_color(bone_shape: Polygon2D, bone_outline_shape: Polygon2D) -
 	if not show_bone:
 		return
 	
+	bone_shape.self_modulate = self_modulate
+	bone_outline_shape.self_modulate = self_modulate
+	
 	var editor_settings = EditorInterface.get_editor_settings()
 	var bone_ik_color: Color = editor_settings.get_setting("editors/2d/bone_ik_color")
 	var bone_color1: Color = editor_settings.get_setting("editors/2d/bone_color1")
