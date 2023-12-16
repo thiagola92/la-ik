@@ -1,5 +1,7 @@
-# la-ik
+# LaIK
 Inverse Kinematic addon for Godot.
+
+# Usage
 
 # Installation
 - Download latest release
@@ -11,6 +13,19 @@ Inverse Kinematic addon for Godot.
   - You should be seeing LaIK plugin there, otherwise something was done wrong
 - Check `Enable` in LaIK plugin
 - Restart Godot
+
+# Good and Bad
+Good:
+- Scaling only one of the axis negatively works
+Bad:
+- Probably slower than Godot IK
+	- Written in GDScript
+	- Create Polygon2D to represent bone shapes
+- Only contains logic of
+	- SkeletonModification2DLookAt
+	- SkeletonModification2DTwoBonesIK
+- No integration with Godot default nodes
+	- Can't add skeleton to Polygon2D.skeleton
 
 # Why
 (11-dez-2023) After a long time reading Godot inverse kinematic and trying to fix ([#83397][1], [#83330][2], [#81544][3], [#81051][4], [#81048][5]), I started questioning myself if my changes were correct ([comment][6]).  
