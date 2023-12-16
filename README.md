@@ -17,6 +17,7 @@ Inverse Kinematic addon for Godot.
 # Good and Bad
 Good:
 - Scaling only one of the axis negatively works
+
 Bad:
 - Probably slower than Godot IK
 	- Written in GDScript
