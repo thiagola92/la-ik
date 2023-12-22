@@ -207,7 +207,10 @@ func _update_shapes() -> void:
 		# Before this node free itself, it needs to free it children.
 		# So there is a chance that the child doesn't exist anymore and
 		# the array is holding a <Freed Object>.
-		if _bone_shapes[i] == null or _bone_outline_shapes[i] == null:
+		if not is_instance_valid(_bone_shapes[i]):
+			return
+		
+		if not is_instance_valid(_bone_outline_shapes[i]):
 			return
 		
 		_update_shape(_bone_shapes[i], _bone_outline_shapes[i], get_child_bone(i))
