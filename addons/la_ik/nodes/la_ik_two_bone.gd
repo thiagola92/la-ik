@@ -66,7 +66,11 @@ func _start_listen_bone(bone: LaBone) -> void:
 	if not bone.transform_changed.is_connected(queue_redraw):
 		bone.transform_changed.connect(queue_redraw)
 	
-	# Erase the constraint draw by setting bone to null.
+	# If any bone is removed from tree, redraw constraints.
+	if not bone.tree_exiting.is_connected(queue_redraw):
+		bone.tree_exiting.connect(queue_redraw)
+	
+	# If any bone is queue for deletion, set it to null.
 	if not bone.tree_exiting.is_connected(_forget_bone.bind(bone)):
 		bone.tree_exiting.connect(_forget_bone.bind(bone))
 	
@@ -85,8 +89,14 @@ func _listen_child_bone_changes(previous_child_bone: LaBone, current_child_bone:
 			current_child_bone.transform_changed.connect(queue_redraw)
 
 
-# TODO: Make able to undo/redo/do, use EditorUndoRedoManager (EditorPlugin.get_undo_redo())
+## Set bone to null if it's queued for deletion.[br]
+## Used to avoid undefined behavior when acessing freed object.[br][br]
+## Note: You can still remove from tree and stored in a variable for later use
+## (this happens all the time in the editor when switching scenes).
 func _forget_bone(bone: LaBone) -> void:
+	if not bone.is_queued_for_deletion():
+		return
+	
 	if bone == bone_one:
 		bone_one = null
 	elif bone == bone_two:
@@ -102,6 +112,9 @@ func _stop_listen_bone(bone: LaBone) -> void:
 	
 	if bone.transform_changed.is_connected(queue_redraw):
 		bone.transform_changed.disconnect(queue_redraw)
+	
+	if bone.tree_exiting.is_connected(queue_redraw):
+		bone.tree_exiting.disconnect(queue_redraw)
 	
 	if bone.tree_exiting.is_connected(_forget_bone.bind(bone)):
 		bone.tree_exiting.disconnect(_forget_bone.bind(bone))

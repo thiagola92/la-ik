@@ -97,7 +97,7 @@ func _draw_angle_constraints(
 	constraint_enabled: bool,
 	localspace: bool,
 	inverted: bool,
-) -> void:	
+) -> void:
 	if not main_bone:
 		return
 	

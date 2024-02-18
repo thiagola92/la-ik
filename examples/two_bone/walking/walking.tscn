@@ -349,8 +349,8 @@ _data = {
 [node name="Sprites" type="Node2D" parent="."]
 
 [node name="ArmL" type="Sprite2D" parent="Sprites"]
-position = Vector2(66.8311, -172.05)
-rotation = -0.544193
+position = Vector2(66.8312, -172.05)
+rotation = -0.544192
 texture = ExtResource("1_7vcdq")
 offset = Vector2(0, 50)
 
@@ -383,18 +383,18 @@ texture = ExtResource("9_kri68")
 
 [node name="Body" type="Sprite2D" parent="Sprites"]
 position = Vector2(0, -36)
-rotation = -0.0196055
+rotation = -0.019605
 texture = ExtResource("3_g3v2r")
 offset = Vector2(0, -100)
 
 [node name="Head" type="Sprite2D" parent="Sprites"]
-position = Vector2(19.5327, -376.735)
+position = Vector2(19.5328, -376.735)
 rotation = -0.0301954
 scale = Vector2(1, 1)
 texture = ExtResource("8_qykvt")
 
 [node name="Jaw" type="Sprite2D" parent="Sprites"]
-position = Vector2(-64.1703, -233.143)
+position = Vector2(-64.1702, -233.143)
 rotation = -0.0301954
 scale = Vector2(1, 1)
 texture = ExtResource("10_rfc50")
@@ -422,15 +422,15 @@ texture = ExtResource("5_evpt0")
 offset = Vector2(50, 0)
 
 [node name="ArmR" type="Sprite2D" parent="Sprites"]
-position = Vector2(-31.9439, -163.017)
+position = Vector2(-31.9438, -163.017)
 rotation = 1.43381
+scale = Vector2(1, 1)
 texture = ExtResource("2_vcojo")
 offset = Vector2(0, 50)
 
 [node name="ForearmR" type="Sprite2D" parent="Sprites"]
 position = Vector2(-134.461, -172.082)
 rotation = 0.682781
-scale = Vector2(1, 1)
 texture = ExtResource("7_sj2jv")
 offset = Vector2(0, 75)
 

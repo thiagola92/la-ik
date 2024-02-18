@@ -9,6 +9,7 @@ extends LaIK
 	set(b):
 		_undo_modifications()
 		_stop_listen_bone()
+		printt("bone = b", bone, b)
 		bone = b
 		_start_listen_bone()
 		queue_redraw()
@@ -41,6 +42,10 @@ extends LaIK
 
 
 func _draw() -> void:
+	# The bone can be removed from tree and stored in a variable for later use.
+	if not bone.is_inside_tree():
+		return
+	
 	if constraint_visible:
 		_draw_angle_constraints(
 			bone, constraint_min_angle, constraint_max_angle,
@@ -61,7 +66,11 @@ func _start_listen_bone() -> void:
 	if not bone.transform_changed.is_connected(queue_redraw):
 		bone.transform_changed.connect(queue_redraw)
 	
-	# Erase the constraint draw by setting bone to null.
+	# If the bone is removed from tree, redraw constraints.
+	if not bone.tree_exiting.is_connected(queue_redraw):
+		bone.tree_exiting.connect(queue_redraw)
+	
+	# If the bone is queue for deletion, set it to null.
 	if not bone.tree_exiting.is_connected(_forget_bone):
 		bone.tree_exiting.connect(_forget_bone)
 	
@@ -80,9 +89,13 @@ func _listen_child_bone_changes(previous_child_bone: LaBone, current_child_bone:
 			current_child_bone.transform_changed.connect(queue_redraw)
 
 
-# TODO: Make able to undo/redo/do, use EditorUndoRedoManager (EditorPlugin.get_undo_redo())
+## Set bone to null if it's queued for deletion.[br]
+## Used to avoid undefined behavior when acessing freed object.[br][br]
+## Note: You can still remove from tree and stored in a variable for later use
+## (this happens all the time in the editor when switching scenes).
 func _forget_bone() -> void:
-	bone = null
+	if bone.is_queued_for_deletion():
+		bone = null
 
 
 func _stop_listen_bone() -> void:
@@ -94,6 +107,9 @@ func _stop_listen_bone() -> void:
 	
 	if bone.transform_changed.is_connected(queue_redraw):
 		bone.transform_changed.disconnect(queue_redraw)
+	
+	if bone.tree_exiting.is_connected(queue_redraw):
+		bone.tree_exiting.disconnect(queue_redraw)
 	
 	if bone.tree_exiting.is_connected(_forget_bone):
 		bone.tree_exiting.disconnect(_forget_bone)

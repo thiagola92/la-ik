@@ -15,21 +15,13 @@ modifications/0 = SubResource("SkeletonModification2DLookAt_jcx74")
 
 [node name="Test" type="Node2D"]
 
-[node name="Main" type="Node2D" parent="."]
+[node name="One" type="Node2D" parent="."]
 position = Vector2(0, -100)
 script = ExtResource("1_ww7yh")
 
-[node name="LaBone" type="Node2D" parent="Main"]
+[node name="Two" type="Node2D" parent="One"]
 position = Vector2(50, 0)
 script = ExtResource("1_ww7yh")
-
-[node name="LaIKLookAt" type="Node2D" parent="Main/LaBone" node_paths=PackedStringArray("bone", "target")]
-position = Vector2(-50, 100)
-script = ExtResource("2_y6n5u")
-bone = NodePath("../..")
-target = NodePath("../../../Aim/AimLook")
-constraint_min_angle = -0.785398
-constraint_max_angle = 0.785398
 
 [node name="Aim" type="Node2D" parent="."]
 position = Vector2(158, 0)
@@ -39,6 +31,13 @@ position = Vector2(0, -100)
 
 [node name="AimLook2" type="Marker2D" parent="Aim"]
 position = Vector2(0, 100)
+
+[node name="LaIKLookAt" type="Node2D" parent="." node_paths=PackedStringArray("bone", "target")]
+script = ExtResource("2_y6n5u")
+bone = NodePath("../One")
+target = NodePath("../Aim/AimLook")
+constraint_enabled = true
+constraint_min_angle = -0.374024
 
 [node name="Skeleton2D" type="Skeleton2D" parent="."]
 position = Vector2(0, 100)

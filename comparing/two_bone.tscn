@@ -19,15 +19,15 @@ modifications/0 = SubResource("SkeletonModification2DTwoBoneIK_g2nr3")
 [node name="Test2" type="Node2D"]
 scale = Vector2(2, 1)
 
-[node name="Main" type="Node2D" parent="."]
+[node name="One" type="Node2D" parent="."]
 position = Vector2(0, -100)
 script = ExtResource("1_yvp1u")
 
-[node name="One" type="Node2D" parent="Main"]
+[node name="Two" type="Node2D" parent="One"]
 position = Vector2(100, 0)
 script = ExtResource("1_yvp1u")
 
-[node name="Two" type="Node2D" parent="Main/One"]
+[node name="Three" type="Node2D" parent="One/Two"]
 position = Vector2(100, 0)
 script = ExtResource("1_yvp1u")
 
@@ -43,8 +43,8 @@ position = Vector2(0, 100)
 [node name="LaIKTwoBone" type="Node2D" parent="." node_paths=PackedStringArray("bone_one", "bone_two", "target")]
 scale = Vector2(0.5, 1)
 script = ExtResource("2_jw1vy")
-bone_one = NodePath("../Main")
-bone_two = NodePath("../Main/One")
+bone_one = NodePath("../One")
+bone_two = NodePath("../One/Two")
 target = NodePath("../Aim/AimTwo")
 
 [node name="Skeleton2D" type="Skeleton2D" parent="."]
