@@ -5,7 +5,7 @@
 
 [sub_resource type="SkeletonModification2DLookAt" id="SkeletonModification2DLookAt_jcx74"]
 bone_index = 0
-bone2d_node = NodePath("Bone2D")
+bone2d_node = NodePath("One")
 target_nodepath = NodePath("../Aim/AimLook2")
 
 [sub_resource type="SkeletonModificationStack2D" id="SkeletonModificationStack2D_mjh56"]
@@ -24,7 +24,7 @@ position = Vector2(50, 0)
 script = ExtResource("1_ww7yh")
 
 [node name="Aim" type="Node2D" parent="."]
-position = Vector2(158, 0)
+position = Vector2(150, 0)
 
 [node name="AimLook" type="Marker2D" parent="Aim"]
 position = Vector2(0, -100)
@@ -36,17 +36,16 @@ position = Vector2(0, 100)
 script = ExtResource("2_y6n5u")
 bone = NodePath("../One")
 target = NodePath("../Aim/AimLook")
-constraint_enabled = true
 constraint_min_angle = -0.374024
 
 [node name="Skeleton2D" type="Skeleton2D" parent="."]
 position = Vector2(0, 100)
 modification_stack = SubResource("SkeletonModificationStack2D_mjh56")
 
-[node name="Bone2D" type="Bone2D" parent="Skeleton2D"]
+[node name="One" type="Bone2D" parent="Skeleton2D"]
 rest = Transform2D(1, 0, 0, 1, 0, 0)
 metadata/_local_pose_override_enabled_ = true
 
-[node name="Bone2D" type="Bone2D" parent="Skeleton2D/Bone2D"]
+[node name="Two" type="Bone2D" parent="Skeleton2D/One"]
 position = Vector2(50, 0)
 rest = Transform2D(1, 0, 0, 1, 50, 0)

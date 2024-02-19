@@ -1,21 +1,28 @@
-[gd_scene load_steps=3 format=3 uid="uid://iu3klbvrvwc5"]
+[gd_scene load_steps=5 format=3 uid="uid://iu3klbvrvwc5"]
+
+[ext_resource type="Script" path="res://addons/la_ik/nodes/la_bone.gd" id="1_vjioq"]
+[ext_resource type="Script" path="res://addons/la_ik/nodes/la_ik_ccdik.gd" id="2_e7upd"]
 
 [sub_resource type="SkeletonModification2DCCDIK" id="SkeletonModification2DCCDIK_x6agb"]
-target_nodepath = NodePath("../Marker2D")
+target_nodepath = NodePath("../Aim/AimCCDIK2")
 tip_nodepath = NodePath("Bone2D/Bone2D/Bone2D/Bone2D")
 ccdik_data_chain_length = 3
 joint_data/0/bone_index = 0
-joint_data/0/bone2d_node = NodePath("Bone2D")
+joint_data/0/bone2d_node = NodePath("One")
 joint_data/0/rotate_from_joint = false
-joint_data/0/enable_constraint = false
+joint_data/0/enable_constraint = true
+joint_data/0/constraint_angle_min = 0.0
+joint_data/0/constraint_angle_max = 360.0
+joint_data/0/constraint_angle_invert = false
+joint_data/0/constraint_in_localspace = true
 joint_data/0/editor_draw_gizmo = true
 joint_data/1/bone_index = 1
-joint_data/1/bone2d_node = NodePath("Bone2D/Bone2D")
+joint_data/1/bone2d_node = NodePath("One/Two")
 joint_data/1/rotate_from_joint = false
 joint_data/1/enable_constraint = false
 joint_data/1/editor_draw_gizmo = true
 joint_data/2/bone_index = 2
-joint_data/2/bone2d_node = NodePath("Bone2D/Bone2D/Bone2D")
+joint_data/2/bone2d_node = NodePath("One/Two/Three")
 joint_data/2/rotate_from_joint = false
 joint_data/2/enable_constraint = false
 joint_data/2/editor_draw_gizmo = true
@@ -27,26 +34,62 @@ modifications/0 = SubResource("SkeletonModification2DCCDIK_x6agb")
 
 [node name="Test3" type="Node2D"]
 
+[node name="One" type="Node2D" parent="."]
+position = Vector2(0, -100)
+script = ExtResource("1_vjioq")
+
+[node name="Two" type="Node2D" parent="One"]
+position = Vector2(100, 0)
+script = ExtResource("1_vjioq")
+
+[node name="Three" type="Node2D" parent="One/Two"]
+position = Vector2(100, 0)
+script = ExtResource("1_vjioq")
+
+[node name="Four" type="Node2D" parent="One/Two/Three"]
+position = Vector2(100, 0)
+script = ExtResource("1_vjioq")
+
+[node name="Aim" type="Node2D" parent="."]
+position = Vector2(300, 0)
+
+[node name="AimCCDIK" type="Marker2D" parent="Aim"]
+position = Vector2(0, -100)
+
+[node name="AimCCDIK2" type="Marker2D" parent="Aim"]
+position = Vector2(0, 100)
+
+[node name="LaIKCCDIK" type="Node2D" parent="." node_paths=PackedStringArray("bone_root", "bone_tip", "chain/0/bone", "chain/1/bone", "chain/2/bone", "chain/3/bone")]
+script = ExtResource("2_e7upd")
+bone_root = NodePath("../One")
+bone_tip = NodePath("../One/Two/Three/Four")
+chain/0/bone = NodePath("../One/Two/Three/Four")
+chain/0/order = null
+chain/1/bone = NodePath("../One/Two/Three")
+chain/1/order = null
+chain/2/bone = NodePath("../One/Two")
+chain/2/order = null
+chain/3/bone = NodePath("../One")
+chain/3/order = null
+
 [node name="Skeleton2D" type="Skeleton2D" parent="."]
+position = Vector2(0, 100)
 modification_stack = SubResource("SkeletonModificationStack2D_2hh04")
 
-[node name="Bone2D" type="Bone2D" parent="Skeleton2D"]
+[node name="One" type="Bone2D" parent="Skeleton2D"]
 rest = Transform2D(1, 0, 0, 1, 0, 0)
 metadata/_local_pose_override_enabled_ = true
 
-[node name="Bone2D" type="Bone2D" parent="Skeleton2D/Bone2D"]
+[node name="Two" type="Bone2D" parent="Skeleton2D/One"]
 position = Vector2(100, 0)
 rest = Transform2D(1, 0, 0, 1, 100, 0)
 metadata/_local_pose_override_enabled_ = true
 
-[node name="Bone2D" type="Bone2D" parent="Skeleton2D/Bone2D/Bone2D"]
+[node name="Three" type="Bone2D" parent="Skeleton2D/One/Two"]
 position = Vector2(100, 0)
 rest = Transform2D(1, 0, 0, 1, 100, 0)
 metadata/_local_pose_override_enabled_ = true
 
-[node name="Bone2D" type="Bone2D" parent="Skeleton2D/Bone2D/Bone2D/Bone2D"]
+[node name="Four" type="Bone2D" parent="Skeleton2D/One/Two/Three"]
 position = Vector2(100, 0)
 rest = Transform2D(1, 0, 0, 1, 100, 0)
-
-[node name="Marker2D" type="Marker2D" parent="."]
-position = Vector2(268, 0)

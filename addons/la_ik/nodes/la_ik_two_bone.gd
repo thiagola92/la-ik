@@ -91,7 +91,7 @@ func _listen_child_bone_changes(previous_child_bone: LaBone, current_child_bone:
 
 ## Set bone to null if it's queued for deletion.[br]
 ## Used to avoid undefined behavior when acessing freed object.[br][br]
-## Note: You can still remove from tree and stored in a variable for later use
+## [b]Note[/b]: You can still remove from tree and stored in a variable for later use
 ## (this happens all the time in the editor when switching scenes).
 func _forget_bone(bone: LaBone) -> void:
 	if not bone.is_queued_for_deletion():

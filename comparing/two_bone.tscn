@@ -6,9 +6,9 @@
 [sub_resource type="SkeletonModification2DTwoBoneIK" id="SkeletonModification2DTwoBoneIK_g2nr3"]
 target_nodepath = NodePath("../Aim/AimTwo2")
 joint_one_bone_idx = 0
-joint_one_bone2d_node = NodePath("Bone2D")
+joint_one_bone2d_node = NodePath("One")
 joint_two_bone_idx = 1
-joint_two_bone2d_node = NodePath("Bone2D/Bone2D")
+joint_two_bone2d_node = NodePath("One/Two")
 editor/draw_min_max = true
 
 [sub_resource type="SkeletonModificationStack2D" id="SkeletonModificationStack2D_exlf2"]
@@ -17,7 +17,6 @@ modification_count = 1
 modifications/0 = SubResource("SkeletonModification2DTwoBoneIK_g2nr3")
 
 [node name="Test2" type="Node2D"]
-scale = Vector2(2, 1)
 
 [node name="One" type="Node2D" parent="."]
 position = Vector2(0, -100)
@@ -32,7 +31,7 @@ position = Vector2(100, 0)
 script = ExtResource("1_yvp1u")
 
 [node name="Aim" type="Node2D" parent="."]
-position = Vector2(225, -1)
+position = Vector2(200, 0)
 
 [node name="AimTwo" type="Marker2D" parent="Aim"]
 position = Vector2(0, -100)
@@ -41,7 +40,6 @@ position = Vector2(0, -100)
 position = Vector2(0, 100)
 
 [node name="LaIKTwoBone" type="Node2D" parent="." node_paths=PackedStringArray("bone_one", "bone_two", "target")]
-scale = Vector2(0.5, 1)
 script = ExtResource("2_jw1vy")
 bone_one = NodePath("../One")
 bone_two = NodePath("../One/Two")
@@ -51,12 +49,12 @@ target = NodePath("../Aim/AimTwo")
 position = Vector2(0, 100)
 modification_stack = SubResource("SkeletonModificationStack2D_exlf2")
 
-[node name="Bone2D" type="Bone2D" parent="Skeleton2D"]
+[node name="One" type="Bone2D" parent="Skeleton2D"]
 metadata/_local_pose_override_enabled_ = true
 
-[node name="Bone2D" type="Bone2D" parent="Skeleton2D/Bone2D"]
+[node name="Two" type="Bone2D" parent="Skeleton2D/One"]
 position = Vector2(100, 0)
 metadata/_local_pose_override_enabled_ = true
 
-[node name="Bone2D" type="Bone2D" parent="Skeleton2D/Bone2D/Bone2D"]
+[node name="Three" type="Bone2D" parent="Skeleton2D/One/Two"]
 position = Vector2(100, 0)
