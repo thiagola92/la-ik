@@ -5,10 +5,10 @@
 
 [sub_resource type="SkeletonModification2DCCDIK" id="SkeletonModification2DCCDIK_x6agb"]
 target_nodepath = NodePath("../Aim/AimCCDIK2")
-tip_nodepath = NodePath("Bone2D/Bone2D/Bone2D/Bone2D")
+tip_nodepath = NodePath("One/Two/Three/Four")
 ccdik_data_chain_length = 3
-joint_data/0/bone_index = 0
-joint_data/0/bone2d_node = NodePath("One")
+joint_data/0/bone_index = 2
+joint_data/0/bone2d_node = NodePath("One/Two/Three")
 joint_data/0/rotate_from_joint = false
 joint_data/0/enable_constraint = true
 joint_data/0/constraint_angle_min = 0.0
@@ -21,8 +21,8 @@ joint_data/1/bone2d_node = NodePath("One/Two")
 joint_data/1/rotate_from_joint = false
 joint_data/1/enable_constraint = false
 joint_data/1/editor_draw_gizmo = true
-joint_data/2/bone_index = 2
-joint_data/2/bone2d_node = NodePath("One/Two/Three")
+joint_data/2/bone_index = 0
+joint_data/2/bone2d_node = NodePath("One")
 joint_data/2/rotate_from_joint = false
 joint_data/2/enable_constraint = false
 joint_data/2/editor_draw_gizmo = true
@@ -59,18 +59,19 @@ position = Vector2(0, -100)
 [node name="AimCCDIK2" type="Marker2D" parent="Aim"]
 position = Vector2(0, 100)
 
-[node name="LaIKCCDIK" type="Node2D" parent="." node_paths=PackedStringArray("bone_root", "bone_tip", "chain/0/bone", "chain/1/bone", "chain/2/bone", "chain/3/bone")]
+[node name="LaIKCCDIK" type="Node2D" parent="." node_paths=PackedStringArray("root_bone", "tip_bone", "chain/0/bone", "chain/1/bone", "chain/2/bone")]
 script = ExtResource("2_e7upd")
-bone_root = NodePath("../One")
-bone_tip = NodePath("../One/Two/Three/Four")
-chain/0/bone = NodePath("../One/Two/Three/Four")
-chain/0/order = null
-chain/1/bone = NodePath("../One/Two/Three")
-chain/1/order = null
-chain/2/bone = NodePath("../One/Two")
-chain/2/order = null
-chain/3/bone = NodePath("../One")
-chain/3/order = null
+root_bone = NodePath("../One")
+tip_bone = NodePath("../One/Two/Three/Four")
+chain/0/bone = NodePath("../One")
+chain/0/order = 2
+chain/0/skip = false
+chain/1/bone = NodePath("../One/Two")
+chain/1/order = 1
+chain/1/skip = false
+chain/2/bone = NodePath("../One/Two/Three")
+chain/2/order = 0
+chain/2/skip = false
 
 [node name="Skeleton2D" type="Skeleton2D" parent="."]
 position = Vector2(0, 100)
