@@ -27,14 +27,14 @@ extends LaIK
 
 @export var constraint_enabled: bool = false:
 	set(e):
-		queue_redraw()
 		constraint_enabled = e
+		queue_redraw()
 
 ## Show a line were [member bone_two] and [member target] can meet.
 @export var constraint_visible: bool = true:
 	set(v):
-		queue_redraw()
 		constraint_visible = v
+		queue_redraw()
 
 ## [b]Note[/b]: This distance is unaffected by scaling.
 @export var constraint_min_distance: float = 0:
@@ -62,15 +62,15 @@ func _start_listen_bone(bone: LaBone) -> void:
 	if not bone.child_order_changed.is_connected(queue_redraw):
 		bone.child_order_changed.connect(queue_redraw)
 	
-	# If any bone move, we need to redraw the constraints position.
+	# If bone move, redraw the constraints position.
 	if not bone.transform_changed.is_connected(queue_redraw):
 		bone.transform_changed.connect(queue_redraw)
 	
-	# If any bone is removed from tree, redraw constraints.
+	# If bone is removed from tree, redraw constraints.
 	if not bone.tree_exiting.is_connected(queue_redraw):
 		bone.tree_exiting.connect(queue_redraw)
 	
-	# If any bone is queue for deletion, set it to null.
+	# If bone is queue for deletion, set it to null.
 	if not bone.tree_exiting.is_connected(_forget_bone.bind(bone)):
 		bone.tree_exiting.connect(_forget_bone.bind(bone))
 	
@@ -89,10 +89,8 @@ func _listen_child_bone_changes(previous_child_bone: LaBone, current_child_bone:
 			current_child_bone.transform_changed.connect(queue_redraw)
 
 
-## Set bone to null if it's queued for deletion.[br]
-## Used to avoid undefined behavior when acessing freed object.[br][br]
-## [b]Note[/b]: You can still remove from tree and stored in a variable for later use
-## (this happens all the time in the editor when switching scenes).
+# Forget bone only if it's being deleted (to avoid acessing freed object).[br]
+# Used when leaving the tree because we don't know if it's being deleted or stored for later.
 func _forget_bone(bone: LaBone) -> void:
 	if not bone.is_queued_for_deletion():
 		return

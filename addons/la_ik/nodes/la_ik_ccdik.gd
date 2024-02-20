@@ -6,17 +6,23 @@ extends LaIK
 ## First bone from the chain.
 @export var root_bone: LaBone:
 	set(r):
+		_stop_listen_bones()
 		root_bone = r
 		_update_chain()
+		_start_listen_bones()
 		notify_property_list_changed()
+		queue_redraw()
 
 ## Last bone from the chain.[br][br]
 ## [b]Note[/b]: It will not be affected by IK.
 @export var tip_bone: LaBone:
 	set(t):
+		_stop_listen_bones()
 		tip_bone = t
 		_update_chain()
+		_start_listen_bones()
 		notify_property_list_changed()
+		queue_redraw()
 
 @export var target: Node2D
 
@@ -169,6 +175,7 @@ func _set(property: StringName, value: Variant) -> bool:
 				chain[index].constraint_localspace = value
 			_:
 				return false
+		queue_redraw()
 		return true
 	
 	return false
@@ -221,6 +228,86 @@ func _update_chain() -> void:
 	
 	# Didn't found root_bone, so clear the array.
 	chain = []
+
+
+func _start_listen_bones() -> void:
+	for bone_data in chain:
+		_start_listen_bone(bone_data.bone)
+
+
+func _start_listen_bone(bone: LaBone) -> void:
+	if not bone:
+		return
+	
+	# The first child bone is used to know where the bone is looking at,
+	# so we need to listen if the first child bone change.
+	if not bone.child_order_changed.is_connected(queue_redraw):
+		bone.child_order_changed.connect(queue_redraw)
+	
+	# If bone move, redraw the constraints position.
+	if not bone.transform_changed.is_connected(queue_redraw):
+		bone.transform_changed.connect(queue_redraw)
+	
+	# If bone is removed from tree, redraw constraints.
+	if not bone.tree_exiting.is_connected(queue_redraw):
+		bone.tree_exiting.connect(queue_redraw)
+	
+	# If bone is queue for deletion, set it to null.
+	if not bone.tree_exiting.is_connected(_forget_bone.bind(bone)):
+		bone.tree_exiting.connect(_forget_bone.bind(bone))
+	
+	# Update contraint in case child bone move.
+	bone.child_bone_changing.connect(_listen_child_bone_changes)
+	_listen_child_bone_changes(null, bone.get_child_bone())
+
+
+func _listen_child_bone_changes(previous_child_bone: LaBone, current_child_bone: LaBone) -> void:
+	if previous_child_bone:
+		if previous_child_bone.transform_changed.is_connected(queue_redraw):
+			previous_child_bone.transform_changed.disconnect(queue_redraw)
+	
+	if current_child_bone:
+		if not current_child_bone.transform_changed.is_connected(queue_redraw):
+			current_child_bone.transform_changed.connect(queue_redraw)
+
+
+# Forget bone only if it's being deleted (to avoid acessing freed object).[br]
+# Used when leaving the tree because we don't know if it's being deleted or stored for later.
+func _forget_bone(bone: LaBone) -> void:
+	if not bone.is_queued_for_deletion():
+		return
+	
+	if bone == root_bone:
+		root_bone = null
+	else:
+		_stop_listen_bones()
+		_update_chain.call_deferred() # Call after bone leave the tree.
+		_start_listen_bones.call_deferred()
+
+
+func _stop_listen_bones() -> void:
+	for bone_data in chain:
+		_stop_listen_bone(bone_data.bone)
+
+
+func _stop_listen_bone(bone: LaBone) -> void:
+	if not bone:
+		return
+	
+	if bone.child_order_changed.is_connected(queue_redraw):
+		bone.child_order_changed.disconnect(queue_redraw)
+	
+	if bone.transform_changed.is_connected(queue_redraw):
+		bone.transform_changed.disconnect(queue_redraw)
+	
+	if bone.tree_exiting.is_connected(queue_redraw):
+		bone.tree_exiting.disconnect(queue_redraw)
+	
+	if bone.tree_exiting.is_connected(_forget_bone.bind(bone)):
+		bone.tree_exiting.disconnect(_forget_bone.bind(bone))
+	
+	if bone.child_bone_changing.is_connected(_listen_child_bone_changes):
+		bone.child_bone_changing.disconnect(_listen_child_bone_changes)
 
 
 # Data used in each bone during execution.

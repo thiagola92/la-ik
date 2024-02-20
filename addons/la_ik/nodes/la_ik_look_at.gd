@@ -9,7 +9,6 @@ extends LaIK
 	set(b):
 		_undo_modifications()
 		_stop_listen_bone()
-		printt("bone = b", bone, b)
 		bone = b
 		_start_listen_bone()
 		queue_redraw()
@@ -23,15 +22,14 @@ extends LaIK
 
 @export var constraint_enabled: bool = false:
 	set(e):
-		queue_redraw()
 		constraint_enabled = e
+		queue_redraw()
 
 @export var constraint_visible: bool = true:
 	set(v):
-		queue_redraw()
 		constraint_visible = v
+		queue_redraw()
 
-## 
 @export_range(-360, 360, 0.01, "radians_as_degrees") var constraint_min_angle: float = 0
 
 @export_range(-360, 360, 0.01, "radians_as_degrees") var constraint_max_angle: float = TAU
@@ -62,15 +60,15 @@ func _start_listen_bone() -> void:
 	if not bone.child_order_changed.is_connected(queue_redraw):
 		bone.child_order_changed.connect(queue_redraw)
 	
-	# If the bone move, we need to redraw the constraints position.
+	# If bone move, redraw the constraints position.
 	if not bone.transform_changed.is_connected(queue_redraw):
 		bone.transform_changed.connect(queue_redraw)
 	
-	# If the bone is removed from tree, redraw constraints.
+	# If bone is removed from tree, redraw constraints.
 	if not bone.tree_exiting.is_connected(queue_redraw):
 		bone.tree_exiting.connect(queue_redraw)
 	
-	# If the bone is queue for deletion, set it to null.
+	# If bone is queue for deletion, set it to null.
 	if not bone.tree_exiting.is_connected(_forget_bone):
 		bone.tree_exiting.connect(_forget_bone)
 	
@@ -89,10 +87,8 @@ func _listen_child_bone_changes(previous_child_bone: LaBone, current_child_bone:
 			current_child_bone.transform_changed.connect(queue_redraw)
 
 
-## Set bone to null if it's queued for deletion.[br]
-## Used to avoid undefined behavior when acessing freed object.[br][br]
-## [b]Note[/b]: You can still remove from tree and stored in a variable for later use
-## (this happens all the time in the editor when switching scenes).
+# Forget bone only if it's being deleted (to avoid acessing freed object).[br]
+# Used when leaving the tree because we don't know if it's being deleted or stored for later.
 func _forget_bone() -> void:
 	if bone.is_queued_for_deletion():
 		bone = null
