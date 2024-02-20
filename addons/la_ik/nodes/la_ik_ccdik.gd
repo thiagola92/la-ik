@@ -6,6 +6,7 @@ extends LaIK
 ## First bone from the chain.
 @export var root_bone: LaBone:
 	set(r):
+		_undo_modifications()
 		_stop_listen_bones()
 		root_bone = r
 		_update_chain()
@@ -17,6 +18,7 @@ extends LaIK
 ## [b]Note[/b]: It will not be affected by IK.
 @export var tip_bone: LaBone:
 	set(t):
+		_undo_modifications()
 		_stop_listen_bones()
 		tip_bone = t
 		_update_chain()
@@ -56,8 +58,6 @@ func _get(property: StringName) -> Variant:
 		match what:
 			"bone":
 				return chain[index].bone
-			"order":
-				return chain[index].order
 			"skip":
 				return chain[index].skip
 			"constraints" when parts[3] == "enabled":
@@ -86,14 +86,6 @@ func _get_property_list() -> Array[Dictionary]:
 			"usage": PROPERTY_USAGE_DEFAULT | PROPERTY_USAGE_READ_ONLY,
 			"hint": PROPERTY_HINT_NODE_TYPE,
 			"hint_string": "LaBone"
-		})
-		
-		property_list.append({
-			"name": "chain/%s/order" % i,
-			"type": TYPE_INT,
-			"usage": PROPERTY_USAGE_DEFAULT,
-			"hint": PROPERTY_HINT_RANGE,
-			"hint_string": "0, %s" % (chain.size() - 1)
 		})
 		
 		property_list.append({
@@ -157,8 +149,6 @@ func _set(property: StringName, value: Variant) -> bool:
 		match what:
 			"bone":
 				pass # Immutable
-			"order":
-				_set_chain_order(index, value)
 			"skip":
 				chain[index].skip = value
 			"constraints" when parts[3] == "enabled":
@@ -181,23 +171,6 @@ func _set(property: StringName, value: Variant) -> bool:
 	return false
 
 
-# Set the BoneData.order, but this means you have to switch
-# with the BoneData that had this order.
-func _set_chain_order(index: int, order: int) -> void:
-	var idx = -1
-	
-	for i in chain.size():
-		if chain[i].order == order:
-			idx = i
-			break
-	
-	if idx == -1:
-		return
-	
-	chain[idx].order = chain[index].order
-	chain[index].order = order
-
-
 func _update_chain() -> void:
 	if not root_bone:
 		chain = []
@@ -209,14 +182,13 @@ func _update_chain() -> void:
 	
 	# Starting from tip_bone but not including it.
 	var parent = tip_bone.get_parent()
-	var index = 0
 	chain = []
 	
 	while(parent):
 		if not parent is LaBone:
 			break
 		
-		chain.append(BoneData.new(parent, index))
+		chain.append(BoneData.new(parent))
 		
 		# Finished with success because found the root_bone.
 		if parent == root_bone:
@@ -224,7 +196,6 @@ func _update_chain() -> void:
 			return
 		
 		parent = parent.get_parent()
-		index += 1
 	
 	# Didn't found root_bone, so clear the array.
 	chain = []
@@ -310,10 +281,27 @@ func _stop_listen_bone(bone: LaBone) -> void:
 		bone.child_bone_changing.disconnect(_listen_child_bone_changes)
 
 
+func _undo_modifications() -> void:
+	for bone_data in chain:
+		if bone_data.bone:
+			bone_data.bone.restore_pose()
+
+
+func _apply_modifications(_delta: float) -> void:
+	if not enabled:
+		return
+	
+	if not target:
+		return
+	
+	for bone_data in chain:
+		bone_data.bone.cache_pose()
+		bone_data.bone.is_pose_modified = true
+
+
 # Data used in each bone during execution.
 class BoneData:
 	var bone: LaBone
-	var order: int = 0
 	var skip: bool = false
 	
 	var constraint_enabled: bool = false
@@ -323,6 +311,5 @@ class BoneData:
 	var constraint_inverted: bool = false
 	var constraint_localspace: bool = true
 	
-	func _init(b: LaBone, o: int) -> void:
+	func _init(b: LaBone) -> void:
 		bone = b
-		order = o
