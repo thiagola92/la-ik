@@ -36,7 +36,6 @@ position = Vector2(0, 100)
 script = ExtResource("2_y6n5u")
 bone = NodePath("../One")
 target = NodePath("../Aim/AimLook")
-constraint_min_angle = -0.374024
 
 [node name="Skeleton2D" type="Skeleton2D" parent="."]
 position = Vector2(0, 100)

@@ -3,6 +3,7 @@ class_name LaIKCCDIK
 extends LaIK
 
 
+## First bone from the chain.
 @export var root_bone: LaBone:
 	set(r):
 		root_bone = r
@@ -23,10 +24,25 @@ extends LaIK
 var chain: Array[BoneData]
 
 
+func _draw() -> void:
+	for bone_data in chain:
+		# The bone can be removed from tree and stored in a variable for later use.
+		if not bone_data.bone.is_inside_tree():
+			return
+		
+		if bone_data.constraint_visible:
+			_draw_angle_constraints(
+				bone_data.bone, bone_data.constraint_min_angle,
+				bone_data.constraint_max_angle, bone_data.constraint_enabled,
+				bone_data.constraint_localspace, bone_data.constraint_inverted
+			)
+
+
 func _get(property: StringName) -> Variant:
 	if property.begins_with("chain/"):
-		var index = property.get_slice("/", 1).to_int()
-		var what = property.get_slice("/", 2)
+		var parts: Array = property.split("/")
+		var index: int = parts[1].to_int()
+		var what: String = parts[2]
 		
 		if index >= chain.size() or index < 0:
 			return null
@@ -38,6 +54,18 @@ func _get(property: StringName) -> Variant:
 				return chain[index].order
 			"skip":
 				return chain[index].skip
+			"constraints" when parts[3] == "enabled":
+				return chain[index].constraint_enabled
+			"constraints" when parts[3] == "visible":
+				return chain[index].constraint_visible
+			"constraints" when parts[3] == "min_angle":
+				return chain[index].constraint_min_angle
+			"constraints" when parts[3] == "max_angle":
+				return chain[index].constraint_max_angle
+			"constraints" when parts[3] == "inverted":
+				return chain[index].constraint_inverted
+			"constraints" when parts[3] == "localspace":
+				return chain[index].constraint_localspace
 	
 	return null
 
@@ -67,27 +95,81 @@ func _get_property_list() -> Array[Dictionary]:
 			"type": TYPE_BOOL,
 			"usage": PROPERTY_USAGE_DEFAULT,
 		})
+		
+		property_list.append({
+			"name": "chain/%s/constraints/enabled" % i,
+			"type": TYPE_BOOL,
+			"usage": PROPERTY_USAGE_DEFAULT,
+		})
+		
+		property_list.append({
+			"name": "chain/%s/constraints/visible" % i,
+			"type": TYPE_BOOL,
+			"usage": PROPERTY_USAGE_DEFAULT,
+		})
+		
+		property_list.append({
+			"name": "chain/%s/constraints/min_angle" % i,
+			"type": TYPE_FLOAT,
+			"usage": PROPERTY_USAGE_DEFAULT,
+			"hint": PROPERTY_HINT_RANGE,
+			"hint_string": "-360, 360, 0.01, radians_as_degrees"
+		})
+		
+		property_list.append({
+			"name": "chain/%s/constraints/max_angle" % i,
+			"type": TYPE_FLOAT,
+			"usage": PROPERTY_USAGE_DEFAULT,
+			"hint": PROPERTY_HINT_RANGE,
+			"hint_string": "-360, 360, 0.01, radians_as_degrees"
+		})
+		
+		property_list.append({
+			"name": "chain/%s/constraints/inverted" % i,
+			"type": TYPE_BOOL,
+			"usage": PROPERTY_USAGE_DEFAULT,
+		})
+		
+		property_list.append({
+			"name": "chain/%s/constraints/localspace" % i,
+			"type": TYPE_BOOL,
+			"usage": PROPERTY_USAGE_DEFAULT,
+		})
 	
 	return property_list
 
 
 func _set(property: StringName, value: Variant) -> bool:
 	if property.begins_with("chain/"):
-		var index = property.get_slice("/", 1).to_int()
-		var what = property.get_slice("/", 2)
+		var parts: Array = property.split("/")
+		var index: int = parts[1].to_int()
+		var what: String = parts[2]
 		
 		if index >= chain.size() or index < 0:
 			return false
 		
 		match what:
 			"bone":
-				return false
+				pass # Immutable
 			"order":
 				_set_chain_order(index, value)
-				return true
 			"skip":
 				chain[index].skip = value
-				return true
+			"constraints" when parts[3] == "enabled":
+				chain[index].constraint_enabled = value
+			"constraints" when parts[3] == "visible":
+				chain[index].constraint_visible = value
+			"constraints" when parts[3] == "min_angle":
+				chain[index].constraint_min_angle = value
+			"constraints" when parts[3] == "max_angle":
+				chain[index].constraint_max_angle = value
+			"constraints" when parts[3] == "inverted":
+				chain[index].constraint_inverted = value
+			"constraints" when parts[3] == "localspace":
+				chain[index].constraint_localspace = value
+			_:
+				return false
+		return true
 	
 	return false
 
@@ -144,8 +226,15 @@ func _update_chain() -> void:
 # Data used in each bone during execution.
 class BoneData:
 	var bone: LaBone
-	var order: int
-	var skip: bool
+	var order: int = 0
+	var skip: bool = false
+	
+	var constraint_enabled: bool = false
+	var constraint_visible: bool = true
+	var constraint_min_angle: float = 0
+	var constraint_max_angle: float = TAU
+	var constraint_inverted: bool = false
+	var constraint_localspace: bool = true
 	
 	func _init(b: LaBone, o: int) -> void:
 		bone = b
