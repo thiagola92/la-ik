@@ -25,11 +25,10 @@ Bad:
 - Only contains logic of
 	- [SkeletonModification2DLookAt](https://docs.godotengine.org/en/stable/classes/class_skeletonmodification2dlookat.html)
 	- [SkeletonModification2DTwoBonesIK](https://docs.godotengine.org/en/stable/classes/class_skeletonmodification2dtwoboneik.html)
+	- [SkeletonModification2DCCDIK](https://docs.godotengine.org/en/stable/classes/class_skeletonmodification2dccdik.html)
 - No integration with Godot default nodes
 	- Can't add skeleton to [Polygon2D.skeleton](https://docs.godotengine.org/en/stable/classes/class_polygon2d.html#class-polygon2d-property-skeleton)
-
  
-
 # Why
 (11-dez-2023) After a long time reading Godot inverse kinematic and trying to fix ([#83397][1], [#83330][2], [#81544][3], [#81051][4], [#81048][5]), I started questioning myself if my changes were correct ([comment][6]).  
 
@@ -47,4 +46,5 @@ This could be a bad decision, but rewriting will give me a better idea of the pr
 # Credits
 - [Godot](https://godotengine.org/) for most of the code logic.
 - [TwistedTwigleg](https://github.com/TwistedTwigleg) for writing IK for Godot.
-- [Alan Zucconi](https://www.alanzucconi.com/2018/05/02/ik-2d-1/) for logic behind IK.
+- [Alan Zucconi](https://www.alanzucconi.com/2018/05/02/ik-2d-1/) for logic behind Two Bones IK.
+- [Ryan Jucket](https://www.ryanjuckett.com/cyclic-coordinate-descent-in-2d/) for logic behind CCDIK.

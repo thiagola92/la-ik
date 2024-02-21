@@ -50,11 +50,14 @@ position = Vector2(0, 100)
 modification_stack = SubResource("SkeletonModificationStack2D_exlf2")
 
 [node name="One" type="Bone2D" parent="Skeleton2D"]
+rest = Transform2D(1, 0, 0, 1, 0, 0)
 metadata/_local_pose_override_enabled_ = true
 
 [node name="Two" type="Bone2D" parent="Skeleton2D/One"]
 position = Vector2(100, 0)
+rest = Transform2D(1, 0, 0, 1, 100, 0)
 metadata/_local_pose_override_enabled_ = true
 
 [node name="Three" type="Bone2D" parent="Skeleton2D/One/Two"]
 position = Vector2(100, 0)
+rest = Transform2D(1, 0, 0, 1, 100, 0)
