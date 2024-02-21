@@ -28,12 +28,13 @@ extends LaIK
 
 @export var target: Node2D
 
-## Decide the order which bones from the chain will rotate.[br][br]
-## [b]False[/b] go from [member root_bone] to [member tip_bone].[br]
-## [b]True[/b] go from [member tip_bone] to [member root_bone].[br]
-@export var reversed_execution: bool = true:
+## Decide the order which bones from the chain will receive modifications.[br][br]
+## The default behavior is going from [member tip_bone] to [member root_bone]
+## (this is the order which parent bones are discovered).[br][br]
+## When true, it will go from [member root_bone] to [member tip_bone].
+@export var forward_execution: bool:
 	set(i):
-		reversed_execution = i
+		forward_execution = i
 		chain.reverse()
 
 # Contains data about all bones from root_bone until tip_bone (not including it).
@@ -200,7 +201,7 @@ func _update_chain() -> void:
 		
 		# Finished with success because found the root_bone.
 		if parent == root_bone:
-			if reversed_execution:
+			if forward_execution:
 				chain.reverse()
 			
 			return
