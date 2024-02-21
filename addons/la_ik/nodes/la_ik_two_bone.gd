@@ -196,7 +196,7 @@ func _apply_modifications(_delta: float) -> void:
 		angle_1 = -angle_1
 	
 	# Global rotation is affected by scale changes.
-	if bone_one.global_scale.sign().x == bone_one.global_scale.sign().y:
+	if same_sign:
 		bone_one.global_rotation = angle_to_x_axis - angle_0 - bone_one.get_bone_angle()
 	else:
 		bone_one.global_rotation = angle_to_x_axis + angle_0 + bone_one.get_bone_angle()

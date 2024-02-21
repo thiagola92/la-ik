@@ -30,7 +30,7 @@ extends LaIK
 
 ## Decide the order which bones from the chain will receive modifications.[br][br]
 ## The default behavior is going from [member tip_bone] to [member root_bone]
-## (this is the order which parent bones are discovered).[br][br]
+## (this is the order which parent bones are discovered).
 ## When true, it will go from [member root_bone] to [member tip_bone].
 @export var forward_execution: bool:
 	set(i):
@@ -325,15 +325,20 @@ func _apply_modifications(_delta: float) -> void:
 			continue
 		
 		if bone_data.ignore_tip:
-			# You want to put bone close to target.
+			# Put bone close to target.
 			bone.look_at(target.global_position)
 			bone.rotation -= bone.bone_angle
 		else:
-			# You want to put bone close to target without pushing tip away.
+			# Put bone close to target without pushing tip away.
 			var angle_to_target: float = bone.global_position.angle_to_point(target.global_position)
 			var angle_to_tip: float = bone.global_position.angle_to_point(tip_bone.global_position)
 			var angle_diff: float = angle_to_target - angle_to_tip
-			bone.rotate(angle_diff)
+			var same_sign: bool = bone.global_scale.sign().x == bone.global_scale.sign().y
+			
+			if same_sign:
+				bone.rotate(angle_diff)
+			else:
+				bone.rotate(-angle_diff)
 		
 		# Not constraint, finished.
 		if not bone_data.constraint_enabled:
