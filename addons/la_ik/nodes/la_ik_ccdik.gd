@@ -69,6 +69,8 @@ func _get(property: StringName) -> Variant:
 				return chain[index].bone
 			"skip":
 				return chain[index].skip
+			"ignore_tip":
+				return chain[index].ignore_tip
 			"constraints" when parts[3] == "enabled":
 				return chain[index].constraint_enabled
 			"constraints" when parts[3] == "visible":
@@ -99,6 +101,12 @@ func _get_property_list() -> Array[Dictionary]:
 		
 		property_list.append({
 			"name": "chain/%s/skip" % i,
+			"type": TYPE_BOOL,
+			"usage": PROPERTY_USAGE_DEFAULT,
+		})
+		
+		property_list.append({
+			"name": "chain/%s/ignore_tip" % i,
 			"type": TYPE_BOOL,
 			"usage": PROPERTY_USAGE_DEFAULT,
 		})
@@ -160,6 +168,8 @@ func _set(property: StringName, value: Variant) -> bool:
 				pass # Immutable
 			"skip":
 				chain[index].skip = value
+			"ignore_tip":
+				chain[index].ignore_tip = value
 			"constraints" when parts[3] == "enabled":
 				chain[index].constraint_enabled = value
 			"constraints" when parts[3] == "visible":
@@ -174,6 +184,7 @@ func _set(property: StringName, value: Variant) -> bool:
 				chain[index].constraint_localspace = value
 			_:
 				return false
+		_undo_modifications()
 		queue_redraw()
 		return true
 	
@@ -203,7 +214,6 @@ func _update_chain() -> void:
 		if parent == root_bone:
 			if forward_execution:
 				chain.reverse()
-			
 			return
 		
 		parent = parent.get_parent()
@@ -314,16 +324,42 @@ func _apply_modifications(_delta: float) -> void:
 		if bone_data.skip:
 			continue
 		
-		var angle_to_target: float = bone.global_position.angle_to_point(target.global_position)
-		var angle_to_tip: float = bone.global_position.angle_to_point(tip_bone.global_position)
-		var angle_diff: float = angle_to_target - angle_to_tip
-		bone.rotate(angle_diff)
+		if bone_data.ignore_tip:
+			# You want to put bone close to target.
+			bone.look_at(target.global_position)
+			bone.rotation -= bone.bone_angle
+		else:
+			# You want to put bone close to target without pushing tip away.
+			var angle_to_target: float = bone.global_position.angle_to_point(target.global_position)
+			var angle_to_tip: float = bone.global_position.angle_to_point(tip_bone.global_position)
+			var angle_diff: float = angle_to_target - angle_to_tip
+			bone.rotate(angle_diff)
+		
+		# Not constraint, finished.
+		if not bone_data.constraint_enabled:
+			continue
+		
+		if bone_data.constraint_localspace:
+			bone.rotation = _clamp_angle(
+				bone.rotation,
+				bone_data.constraint_min_angle,
+				bone_data.constraint_max_angle,
+				bone_data.constraint_inverted
+			)
+		else:
+			bone.global_rotation = _clamp_angle(
+				bone.global_rotation,
+				bone_data.constraint_min_angle,
+				bone_data.constraint_max_angle,
+				bone_data.constraint_inverted
+			)
 
 
 # Data used in each bone during execution.
 class BoneData:
 	var bone: LaBone
 	var skip: bool = false
+	var ignore_tip = false
 	
 	var constraint_enabled: bool = false
 	var constraint_visible: bool = true
