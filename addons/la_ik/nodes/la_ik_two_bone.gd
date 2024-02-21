@@ -21,7 +21,8 @@ extends LaIK
 
 @export var target: Node2D
 
-@export var flip_bend_direction: bool = false
+## Flip the direction which the bone bend to.
+@export var flip_bend: bool = false
 
 @export_group("Contraints", "constraint_")
 
@@ -190,7 +191,7 @@ func _apply_modifications(_delta: float) -> void:
 	if is_nan(angle_0) or is_nan(angle_1):
 		return
 	
-	if flip_bend_direction:
+	if flip_bend:
 		angle_0 = -angle_0
 		angle_1 = -angle_1
 	

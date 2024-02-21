@@ -28,6 +28,14 @@ extends LaIK
 
 @export var target: Node2D
 
+## Decide the order which bones from the chain will rotate.[br][br]
+## [b]False[/b] go from [member root_bone] to [member tip_bone].[br]
+## [b]True[/b] go from [member tip_bone] to [member root_bone].[br]
+@export var reversed_execution: bool = true:
+	set(i):
+		reversed_execution = i
+		chain.reverse()
+
 # Contains data about all bones from root_bone until tip_bone (not including it).
 var chain: Array[BoneData]
 
@@ -192,7 +200,9 @@ func _update_chain() -> void:
 		
 		# Finished with success because found the root_bone.
 		if parent == root_bone:
-			chain.reverse()
+			if reversed_execution:
+				chain.reverse()
+			
 			return
 		
 		parent = parent.get_parent()
@@ -295,8 +305,18 @@ func _apply_modifications(_delta: float) -> void:
 		return
 	
 	for bone_data in chain:
-		bone_data.bone.cache_pose()
-		bone_data.bone.is_pose_modified = true
+		var bone: LaBone = bone_data.bone
+		
+		bone.cache_pose()
+		bone.is_pose_modified = true
+		
+		if bone_data.skip:
+			continue
+		
+		var angle_to_target: float = bone.global_position.angle_to_point(target.global_position)
+		var angle_to_tip: float = bone.global_position.angle_to_point(tip_bone.global_position)
+		var angle_diff: float = angle_to_target - angle_to_tip
+		bone.rotate(angle_diff)
 
 
 # Data used in each bone during execution.
