@@ -1,7 +1,7 @@
 [gd_scene load_steps=5 format=3 uid="uid://iu3klbvrvwc5"]
 
 [ext_resource type="Script" path="res://addons/la_ik/nodes/la_bone.gd" id="1_vjioq"]
-[ext_resource type="Script" path="res://addons/la_ik/nodes/la_ik_ccdik.gd" id="2_e7upd"]
+[ext_resource type="Script" path="res://addons/la_ik/nodes/la_ik_ccd.gd" id="2_e7upd"]
 
 [sub_resource type="SkeletonModification2DCCDIK" id="SkeletonModification2DCCDIK_x6agb"]
 target_nodepath = NodePath("../Aim/AimCCDIK2")
@@ -30,32 +30,7 @@ modifications/0 = SubResource("SkeletonModification2DCCDIK_x6agb")
 
 [node name="Test3" type="Node2D"]
 
-[node name="One" type="Node2D" parent="."]
-position = Vector2(0, -100)
-script = ExtResource("1_vjioq")
-
-[node name="Two" type="Node2D" parent="One"]
-position = Vector2(100, 0)
-script = ExtResource("1_vjioq")
-
-[node name="Three" type="Node2D" parent="One/Two"]
-position = Vector2(100, 0)
-script = ExtResource("1_vjioq")
-
-[node name="Four" type="Node2D" parent="One/Two/Three"]
-position = Vector2(100, 0)
-script = ExtResource("1_vjioq")
-
-[node name="Aim" type="Node2D" parent="."]
-position = Vector2(350, 0)
-
-[node name="AimCCDIK" type="Marker2D" parent="Aim"]
-position = Vector2(0, -100)
-
-[node name="AimCCDIK2" type="Marker2D" parent="Aim"]
-position = Vector2(0, 100)
-
-[node name="LaIKCCDIK" type="Node2D" parent="." node_paths=PackedStringArray("root_bone", "tip_bone", "target", "chain/0/bone", "chain/1/bone", "chain/2/bone")]
+[node name="LaIKCCD" type="Node2D" parent="." node_paths=PackedStringArray("root_bone", "tip_bone", "target", "chain/0/bone", "chain/1/bone", "chain/2/bone")]
 script = ExtResource("2_e7upd")
 root_bone = NodePath("../One")
 tip_bone = NodePath("../One/Two/Three/Four")
@@ -87,6 +62,31 @@ chain/2/constraints/min_angle = 0.0
 chain/2/constraints/max_angle = 6.28319
 chain/2/constraints/inverted = false
 chain/2/constraints/localspace = true
+
+[node name="One" type="Node2D" parent="."]
+position = Vector2(0, -100)
+script = ExtResource("1_vjioq")
+
+[node name="Two" type="Node2D" parent="One"]
+position = Vector2(100, 0)
+script = ExtResource("1_vjioq")
+
+[node name="Three" type="Node2D" parent="One/Two"]
+position = Vector2(100, 0)
+script = ExtResource("1_vjioq")
+
+[node name="Four" type="Node2D" parent="One/Two/Three"]
+position = Vector2(100, 0)
+script = ExtResource("1_vjioq")
+
+[node name="Aim" type="Node2D" parent="."]
+position = Vector2(350, 0)
+
+[node name="AimCCDIK" type="Marker2D" parent="Aim"]
+position = Vector2(0, -100)
+
+[node name="AimCCDIK2" type="Marker2D" parent="Aim"]
+position = Vector2(0, 100)
 
 [node name="Skeleton2D" type="Skeleton2D" parent="."]
 position = Vector2(0, 100)

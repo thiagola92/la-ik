@@ -15,6 +15,11 @@ modifications/0 = SubResource("SkeletonModification2DLookAt_jcx74")
 
 [node name="Test" type="Node2D"]
 
+[node name="LaIKLookAt" type="Node2D" parent="." node_paths=PackedStringArray("bone", "target")]
+script = ExtResource("2_y6n5u")
+bone = NodePath("../One")
+target = NodePath("../Aim/AimLook")
+
 [node name="One" type="Node2D" parent="."]
 position = Vector2(0, -100)
 script = ExtResource("1_ww7yh")
@@ -31,11 +36,6 @@ position = Vector2(0, -100)
 
 [node name="AimLook2" type="Marker2D" parent="Aim"]
 position = Vector2(0, 100)
-
-[node name="LaIKLookAt" type="Node2D" parent="." node_paths=PackedStringArray("bone", "target")]
-script = ExtResource("2_y6n5u")
-bone = NodePath("../One")
-target = NodePath("../Aim/AimLook")
 
 [node name="Skeleton2D" type="Skeleton2D" parent="."]
 position = Vector2(0, 100)

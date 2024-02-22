@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" path="res://addons/la_ik/nodes/la_bone.gd" id="1_mu7l1"]
 [ext_resource type="Texture2D" uid="uid://cvmr3yikh2nco" path="res://examples/ccd/snake/body.svg" id="2_8jh6f"]
-[ext_resource type="Script" path="res://addons/la_ik/nodes/la_ik_ccdik.gd" id="3_y0puq"]
+[ext_resource type="Script" path="res://addons/la_ik/nodes/la_ik_ccd.gd" id="3_y0puq"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_mw22t"]
 atlas = ExtResource("2_8jh6f")
@@ -23,7 +23,7 @@ region = Rect2(93, 194, 35, 35)
 [node name="Snake" type="Node2D"]
 position = Vector2(115, 281)
 
-[node name="LaIKCCDIK" type="Node2D" parent="." node_paths=PackedStringArray("root_bone", "tip_bone", "target", "chain/0/bone", "chain/1/bone", "chain/2/bone", "chain/3/bone")]
+[node name="LaIKCCD" type="Node2D" parent="." node_paths=PackedStringArray("root_bone", "tip_bone", "target", "chain/0/bone", "chain/1/bone", "chain/2/bone", "chain/3/bone")]
 position = Vector2(-115, -281)
 script = ExtResource("3_y0puq")
 root_bone = NodePath("../LaBone")

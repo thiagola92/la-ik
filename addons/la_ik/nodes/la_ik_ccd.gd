@@ -1,5 +1,5 @@
 @tool
-class_name LaIKCCDIK
+class_name LaIKCCD
 extends LaIK
 
 
