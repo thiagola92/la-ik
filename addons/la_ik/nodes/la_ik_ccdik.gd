@@ -9,10 +9,12 @@ extends LaIK
 		_undo_modifications()
 		_stop_listen_bones()
 		root_bone = r
-		_update_chain()
-		_start_listen_bones()
-		notify_property_list_changed()
-		queue_redraw()
+		
+		# Call after loading saved chain from tscn file.
+		_update_chain.call_deferred()
+		_start_listen_bones.call_deferred()
+		notify_property_list_changed.call_deferred()
+		queue_redraw.call_deferred()
 
 ## Last bone from the chain.[br][br]
 ## [b]Note[/b]: It will not be affected by IK.
@@ -21,10 +23,12 @@ extends LaIK
 		_undo_modifications()
 		_stop_listen_bones()
 		tip_bone = t
-		_update_chain()
-		_start_listen_bones()
-		notify_property_list_changed()
-		queue_redraw()
+		
+		# Call after loading saved chain from tscn file.
+		_update_chain.call_deferred()
+		_start_listen_bones.call_deferred()
+		notify_property_list_changed.call_deferred()
+		queue_redraw.call_deferred()
 
 @export var target: Node2D
 
@@ -160,12 +164,15 @@ func _set(property: StringName, value: Variant) -> bool:
 		var index: int = parts[1].to_int()
 		var what: String = parts[2]
 		
-		if index >= chain.size() or index < 0:
-			return false
+		if index >= chain.size():
+			chain.resize(index + 1)
+		
+		if chain[index] == null:
+			chain[index] = BoneData.new(null)
 		
 		match what:
 			"bone":
-				pass # Immutable
+				chain[index].bone = value
 			"skip":
 				chain[index].skip = value
 			"ignore_tip":
@@ -182,8 +189,8 @@ func _set(property: StringName, value: Variant) -> bool:
 				chain[index].constraint_inverted = value
 			"constraints" when parts[3] == "localspace":
 				chain[index].constraint_localspace = value
-			_:
-				return false
+		
+		# Restore pose before applying new modifications.
 		_undo_modifications()
 		queue_redraw()
 		return true
@@ -191,6 +198,9 @@ func _set(property: StringName, value: Variant) -> bool:
 	return false
 
 
+# Update bone chain with all bones from tip_bone to root_bone (not including tip_bone).
+# It will clear the chain if doesn't find a path.
+# Note: It doesn't overwrite the chain if is the same (otherwise you lose the saved settings).
 func _update_chain() -> void:
 	if not root_bone:
 		chain = []
@@ -200,20 +210,31 @@ func _update_chain() -> void:
 		chain = []
 		return
 	
-	# Starting from tip_bone but not including it.
 	var parent = tip_bone.get_parent()
-	chain = []
+	var new_chain: Array[BoneData] = []
 	
 	while(parent):
 		if not parent is LaBone:
 			break
 		
-		chain.append(BoneData.new(parent))
+		new_chain.append(BoneData.new(parent))
 		
-		# Finished with success because found the root_bone.
+		# Finished because found the root_bone.
 		if parent == root_bone:
 			if forward_execution:
-				chain.reverse()
+				new_chain.reverse()
+			
+			# Checking if is a new chain [1].
+			if new_chain.size() != chain.size():
+				chain = new_chain
+				return
+			
+			# Checking if is a new chain [2].
+			for i in new_chain.size():
+				if new_chain[i].bone != chain[i].bone:
+					chain = new_chain
+					return
+			
 			return
 		
 		parent = parent.get_parent()
@@ -249,8 +270,9 @@ func _start_listen_bone(bone: LaBone) -> void:
 		bone.tree_exiting.connect(_forget_bone.bind(bone))
 	
 	# Update contraint in case child bone move.
-	bone.child_bone_changing.connect(_listen_child_bone_changes)
-	_listen_child_bone_changes(null, bone.get_child_bone())
+	if not bone.child_bone_changing.is_connected(_listen_child_bone_changes):
+		bone.child_bone_changing.connect(_listen_child_bone_changes)
+		_listen_child_bone_changes(null, bone.get_child_bone())
 
 
 func _listen_child_bone_changes(previous_child_bone: LaBone, current_child_bone: LaBone) -> void:
