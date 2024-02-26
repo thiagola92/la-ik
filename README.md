@@ -34,7 +34,7 @@ Bad:
 
 So I started rewriting in GDScript to get a better knowledge of the logic! The difference is that I'm copying logic that makes sense to me and removing anything that I don't understand why exists (and writing my own logic).
 
-This could be a bad decision, but rewriting will give me a better idea of the problem and solutions.
+This could be a bad decision, but rewriting will give me a better idea of the problems and solutions that others had.
 
 [1]: https://github.com/godotengine/godot/pull/83397
 [2]: https://github.com/godotengine/godot/pull/83330
@@ -44,7 +44,8 @@ This could be a bad decision, but rewriting will give me a better idea of the pr
 [6]: https://github.com/godotengine/godot/pull/83330#issuecomment-1809000653
 
 # Credits
-- [Godot](https://godotengine.org/) for most of the code logic.
-- [TwistedTwigleg](https://github.com/TwistedTwigleg) for writing IK for Godot.
-- [Alan Zucconi](https://www.alanzucconi.com/2018/05/02/ik-2d-1/) for logic behind Two Bones IK.
-- [Ryan Jucket](https://www.ryanjuckett.com/cyclic-coordinate-descent-in-2d/) for logic behind CCDIK.
+- [Godot](https://godotengine.org/).
+- [TwistedTwigleg](https://github.com/godotengine/godot/pull/47872) for writing IK for Godot.
+- [Alan Zucconi](https://www.alanzucconi.com/2018/05/02/ik-2d-1/) for explaining Two Bones IK.
+- [Ryan Jucket](https://www.ryanjuckett.com/cyclic-coordinate-descent-in-2d/) for explaining CCDIK.
+- [Sean](https://sean.cm/a/fabrik-algorithm-2d) for explaining FABRIK.

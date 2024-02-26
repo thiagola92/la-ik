@@ -349,32 +349,34 @@ _data = {
 [node name="Sprites" type="Node2D" parent="."]
 
 [node name="ArmL" type="Sprite2D" parent="Sprites"]
-position = Vector2(66.8312, -172.05)
-rotation = -0.544192
+position = Vector2(89.3101, -168.692)
+rotation = 0.727899
 texture = ExtResource("1_7vcdq")
 offset = Vector2(0, 50)
 
 [node name="ForearmL" type="Sprite2D" parent="Sprites"]
-position = Vector2(114.304, -96.361)
-rotation = -1.57477
+position = Vector2(19.7298, -112.666)
+rotation = -1.13266
 texture = ExtResource("6_k8eto")
 offset = Vector2(0, 75)
 
 [node name="LegL" type="Sprite2D" parent="Sprites"]
-position = Vector2(50.7008, 18.7124)
-rotation = -1.90583
+position = Vector2(33.3876, 12.378)
+rotation = -0.768497
 texture = ExtResource("11_dsccs")
 offset = Vector2(0, 50)
 
 [node name="ShinL" type="Sprite2D" parent="Sprites"]
-position = Vector2(131.609, -0.20181)
-rotation = 0.174064
+position = Vector2(79.3412, 80.5475)
+rotation = 0.653755
+scale = Vector2(1, 1)
 texture = ExtResource("13_tsy7o")
 offset = Vector2(30, 50)
 
 [node name="FootL" type="Sprite2D" parent="Sprites"]
-position = Vector2(111, 117)
-rotation = 0.174064
+position = Vector2(6.96881, 175.01)
+rotation = 0.653755
+scale = Vector2(1, 1)
 texture = ExtResource("4_adiox")
 offset = Vector2(50, 0)
 
@@ -383,54 +385,49 @@ texture = ExtResource("9_kri68")
 
 [node name="Body" type="Sprite2D" parent="Sprites"]
 position = Vector2(0, -36)
-rotation = -0.019605
 texture = ExtResource("3_g3v2r")
 offset = Vector2(0, -100)
 
 [node name="Head" type="Sprite2D" parent="Sprites"]
-position = Vector2(19.5328, -376.735)
-rotation = -0.0301954
-scale = Vector2(1, 1)
+position = Vector2(28, -376)
 texture = ExtResource("8_qykvt")
 
 [node name="Jaw" type="Sprite2D" parent="Sprites"]
-position = Vector2(-64.1702, -233.143)
-rotation = -0.0301954
-scale = Vector2(1, 1)
+position = Vector2(-60, -235)
 texture = ExtResource("10_rfc50")
 offset = Vector2(100, 0)
 
 [node name="LegR" type="Sprite2D" parent="Sprites"]
-position = Vector2(-66.6974, 1.71472)
-rotation = 0.0588202
-scale = Vector2(1, 1)
+position = Vector2(-69.0652, 7.28687)
+rotation = -0.825978
 texture = ExtResource("12_8jb6l")
 offset = Vector2(0, 50)
 
 [node name="ShinR" type="Sprite2D" parent="Sprites"]
-position = Vector2(-91.6058, 86.0271)
-rotation = 0.661891
+position = Vector2(-13.1238, 67.2236)
+rotation = 0.673708
 scale = Vector2(1, 1)
 texture = ExtResource("14_g8h8o")
 offset = Vector2(30, 50)
 
 [node name="FootR" type="Sprite2D" parent="Sprites"]
-position = Vector2(-170, 172)
-rotation = 0.661891
+position = Vector2(-92.5284, 152.264)
+rotation = 0.673708
 scale = Vector2(1, 1)
 texture = ExtResource("5_evpt0")
 offset = Vector2(50, 0)
 
 [node name="ArmR" type="Sprite2D" parent="Sprites"]
-position = Vector2(-31.9438, -163.017)
-rotation = 1.43381
+position = Vector2(-35.443, -171.161)
+rotation = 0.767103
 scale = Vector2(1, 1)
 texture = ExtResource("2_vcojo")
 offset = Vector2(0, 50)
 
 [node name="ForearmR" type="Sprite2D" parent="Sprites"]
-position = Vector2(-134.461, -172.082)
-rotation = 0.682781
+position = Vector2(-136.419, -123.2)
+rotation = -0.563752
+scale = Vector2(1, 1)
 texture = ExtResource("7_sj2jv")
 offset = Vector2(0, 75)
 
@@ -582,6 +579,7 @@ constraint_enabled = true
 constraint_min_angle = -0.785398
 constraint_max_angle = 0.785398
 constraint_inverted = true
+enabled = false
 
 [node name="Body" type="Node2D" parent="IK" node_paths=PackedStringArray("bone", "target")]
 script = ExtResource("16_216fy")
@@ -591,20 +589,21 @@ constraint_enabled = true
 constraint_min_angle = -0.785398
 constraint_max_angle = 0.785398
 constraint_inverted = true
+enabled = false
 
 [node name="ArmR" type="Node2D" parent="IK" node_paths=PackedStringArray("bone_one", "bone_two", "target")]
 script = ExtResource("17_rfi5f")
 bone_one = NodePath("../../Skeleton/Hip/Body/ArmR")
 bone_two = NodePath("../../Skeleton/Hip/Body/ArmR/ForearmR")
 target = NodePath("../../Targets/ArmR")
-flip_bend_direction = true
+flip_bend = true
 
 [node name="ArmL" type="Node2D" parent="IK" node_paths=PackedStringArray("bone_one", "bone_two", "target")]
 script = ExtResource("17_rfi5f")
 bone_one = NodePath("../../Skeleton/Hip/Body/ArmL")
 bone_two = NodePath("../../Skeleton/Hip/Body/ArmL/ForearmL")
 target = NodePath("../../Targets/ArmL")
-flip_bend_direction = true
+flip_bend = true
 
 [node name="LegL" type="Node2D" parent="IK" node_paths=PackedStringArray("bone_one", "bone_two", "target")]
 script = ExtResource("17_rfi5f")
