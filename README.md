@@ -2,6 +2,11 @@
 Inverse Kinematic addon for Godot.
 
 # Usage
+First, there is no `Node` like `Skeleton2D`! Why? I don't know but my plan is to wait the "need" for it.  
+Second, inverse kinematics are not `Resource`! There is a `Node` for each IK.  
+Third, this will be a simple and short "Usage"! I change so much this project that is better not making any commitment to the documentation.  
+
+My commitment is so low that I made a [short video](https://youtu.be/42IAwWF51gE) (without sound) showing how to use 3 of the inverse kinematics.  
 
 # Installation
 - Download latest release
