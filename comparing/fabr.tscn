@@ -1,3 +1,111 @@
-[gd_scene format=3 uid="uid://bw3aoclhumxfd"]
+[gd_scene load_steps=6 format=3 uid="uid://bw3aoclhumxfd"]
+
+[ext_resource type="Script" path="res://addons/la_ik/nodes/la_bone.gd" id="1_ktmni"]
+[ext_resource type="Script" path="res://addons/la_ik/nodes/la_ik_fabr.gd" id="1_lcapt"]
+[ext_resource type="Texture2D" uid="uid://blbbch3pqscg6" path="res://icon.svg" id="3_ovdsb"]
+
+[sub_resource type="SkeletonModification2DFABRIK" id="SkeletonModification2DFABRIK_2b683"]
+target_nodepath = NodePath("../Aim/AimFABRIK2")
+fabrik_data_chain_length = 3
+joint_data/0/bone_index = 0
+joint_data/0/bone2d_node = NodePath("One")
+joint_data/1/bone_index = 1
+joint_data/1/bone2d_node = NodePath("One/Two")
+joint_data/1/magnet_position = Vector2(0, 0)
+joint_data/2/bone_index = 2
+joint_data/2/bone2d_node = NodePath("One/Two/Three")
+joint_data/2/magnet_position = Vector2(0, 0)
+joint_data/2/use_target_rotation = false
+
+[sub_resource type="SkeletonModificationStack2D" id="SkeletonModificationStack2D_4ds0b"]
+enabled = true
+modification_count = 1
+modifications/0 = SubResource("SkeletonModification2DFABRIK_2b683")
 
 [node name="Test4" type="Node2D"]
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+modulate = Color(1, 1, 1, 0.415686)
+position = Vector2(0, -100)
+scale = Vector2(0.25, 0.25)
+texture = ExtResource("3_ovdsb")
+
+[node name="LaIKFABR" type="Node2D" parent="." node_paths=PackedStringArray("root_bone", "tip_bone", "target", "chain/0/bone", "chain/1/bone", "chain/2/bone")]
+script = ExtResource("1_lcapt")
+root_bone = NodePath("../One")
+tip_bone = NodePath("../One/Two/Three/Four")
+target = NodePath("../Aim/AimFABRIK")
+chain/0/bone = NodePath("../One/Two/Three")
+chain/1/bone = NodePath("../One/Two")
+chain/2/bone = NodePath("../One")
+chain/2/target_rotation = false
+
+[node name="One" type="Node2D" parent="."]
+position = Vector2(0, -100)
+script = ExtResource("1_ktmni")
+
+[node name="Line2D" type="Line2D" parent="One"]
+points = PackedVector2Array(0, 0, 100, 0)
+default_color = Color(0, 0, 1, 1)
+
+[node name="Two" type="Node2D" parent="One"]
+position = Vector2(100, 0)
+script = ExtResource("1_ktmni")
+
+[node name="Line2D" type="Line2D" parent="One/Two"]
+points = PackedVector2Array(0, 0, 100, 0)
+default_color = Color(1, 1, 0, 1)
+
+[node name="Three" type="Node2D" parent="One/Two"]
+position = Vector2(100, 0)
+script = ExtResource("1_ktmni")
+
+[node name="Line2D2" type="Line2D" parent="One/Two/Three"]
+points = PackedVector2Array(0, 0, 100, 0)
+default_color = Color(1, 0, 1, 1)
+
+[node name="Four" type="Node2D" parent="One/Two/Three"]
+position = Vector2(100, 0)
+script = ExtResource("1_ktmni")
+
+[node name="Line2D" type="Line2D" parent="One/Two/Three/Four"]
+points = PackedVector2Array(0, 0, 16, 0)
+default_color = Color(0, 1, 1, 1)
+
+[node name="Aim" type="Marker2D" parent="."]
+position = Vector2(350, 0)
+
+[node name="AimFABRIK" type="Marker2D" parent="Aim"]
+position = Vector2(0, -100)
+
+[node name="Sprite2D" type="Sprite2D" parent="Aim/AimFABRIK"]
+modulate = Color(1, 1, 1, 0.239216)
+scale = Vector2(0.25, 0.25)
+texture = ExtResource("3_ovdsb")
+
+[node name="AimFABRIK2" type="Marker2D" parent="Aim"]
+position = Vector2(0, 100)
+
+[node name="Skeleton2D" type="Skeleton2D" parent="."]
+position = Vector2(0, 100)
+modification_stack = SubResource("SkeletonModificationStack2D_4ds0b")
+
+[node name="One" type="Bone2D" parent="Skeleton2D"]
+rest = Transform2D(1, 0, 0, 1, 0, 0)
+metadata/_local_pose_override_enabled_ = true
+
+[node name="Two" type="Bone2D" parent="Skeleton2D/One"]
+position = Vector2(100, 0)
+rest = Transform2D(1, 0, 0, 1, 100, 0)
+metadata/_local_pose_override_enabled_ = true
+
+[node name="Three" type="Bone2D" parent="Skeleton2D/One/Two"]
+position = Vector2(100, 0)
+rest = Transform2D(1, 0, 0, 1, 100, 0)
+metadata/_local_pose_override_enabled_ = true
+
+[node name="Four" type="Bone2D" parent="Skeleton2D/One/Two/Three"]
+position = Vector2(100, 0)
+rest = Transform2D(1, 0, 0, 1, 100, 0)
+
+[node name="Camera2D" type="Camera2D" parent="."]

@@ -30,7 +30,7 @@ modifications/0 = SubResource("SkeletonModification2DCCDIK_x6agb")
 
 [node name="Test3" type="Node2D"]
 
-[node name="LaIKCCD" type="Node2D" parent="." node_paths=PackedStringArray("root_bone", "tip_bone", "target", "chain/0/bone", "chain/1/bone", "chain/2/bone")]
+[node name="LaIKCCD" type="Node2D" parent="." node_paths=PackedStringArray("root_bone", "tip_bone", "target", "chain/0/bone", "chain/1/bone")]
 script = ExtResource("2_e7upd")
 root_bone = NodePath("../One")
 tip_bone = NodePath("../One/Two/Three/Four")
@@ -53,15 +53,14 @@ chain/1/constraints/min_angle = 0.0
 chain/1/constraints/max_angle = 6.28319
 chain/1/constraints/inverted = false
 chain/1/constraints/localspace = true
-chain/2/bone = NodePath("../One")
-chain/2/skip = false
-chain/2/ignore_tip = false
-chain/2/constraints/enabled = false
-chain/2/constraints/visible = true
-chain/2/constraints/min_angle = 0.0
-chain/2/constraints/max_angle = 6.28319
-chain/2/constraints/inverted = false
-chain/2/constraints/localspace = true
+chain/2/skip = null
+chain/2/ignore_tip = null
+chain/2/constraints/enabled = null
+chain/2/constraints/visible = null
+chain/2/constraints/min_angle = null
+chain/2/constraints/max_angle = null
+chain/2/constraints/inverted = null
+chain/2/constraints/localspace = null
 
 [node name="One" type="Node2D" parent="."]
 position = Vector2(0, -100)
