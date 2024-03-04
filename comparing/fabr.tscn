@@ -14,7 +14,7 @@ joint_data/1/magnet_position = Vector2(0, 0)
 joint_data/2/bone_index = 2
 joint_data/2/bone2d_node = NodePath("One/Two/Three")
 joint_data/2/magnet_position = Vector2(0, 0)
-joint_data/2/use_target_rotation = false
+joint_data/2/use_target_rotation = true
 
 [sub_resource type="SkeletonModificationStack2D" id="SkeletonModificationStack2D_4ds0b"]
 enabled = true
@@ -31,7 +31,6 @@ target = NodePath("../Aim/AimFABRIK")
 chain/0/bone = NodePath("../One/Two/Three")
 chain/1/bone = NodePath("../One/Two")
 chain/2/bone = NodePath("../One")
-chain/2/target_rotation = false
 
 [node name="One" type="Node2D" parent="."]
 position = Vector2(0, -100)
@@ -50,7 +49,7 @@ position = Vector2(100, 0)
 script = ExtResource("1_ktmni")
 
 [node name="Aim" type="Marker2D" parent="."]
-position = Vector2(291, 0)
+position = Vector2(300, 0)
 
 [node name="AimFABRIK" type="Marker2D" parent="Aim"]
 position = Vector2(0, -100)

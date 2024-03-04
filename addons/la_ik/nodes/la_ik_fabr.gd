@@ -37,6 +37,9 @@ extends LaIK
 ## This is capped at 10 to avoid to accidents of setting it too high.
 @export_range(1, 10, 1) var iterations: int = 10
 
+## Make [member tip_bone]'s parent use same rotation as the target.
+@export var target_rotation: bool = false
+
 # Contains data about all bones from root_bone until tip_bone (not including it).
 # Ordered from tip_bone to root_bone, because this is the order which they are discovered.
 var chain: Array[BoneData]
@@ -78,15 +81,6 @@ func _get_property_list() -> Array[Dictionary]:
 			"hint": PROPERTY_HINT_NODE_TYPE,
 			"hint_string": "LaBone"
 		})
-		
-		# Only the last bone can use target rotation,
-		# others have to use their children rotation.
-		if i == chain.size() - 1:
-			property_list.append({
-				"name": "chain/%s/target_rotation" % i,
-				"type": TYPE_BOOL,
-				"usage": PROPERTY_USAGE_DEFAULT,
-			})
 	
 	return property_list
 
@@ -284,9 +278,14 @@ func _apply_modifications(_delta: float) -> void:
 
 # Walk backwards applying modifications.
 func _apply_backwards_modifications() -> void:
-	# Each bones target is the next bone position,
-	# except the last bone which uses the real target.
+	# The bone closest to the tip is aiming the target,
+	# others bones are aiming the following bone.
 	var target_global_position = target.global_position
+	
+	# Treating when the user wants the bone poiting same direction as the target.
+	if target_rotation:
+		var direction = Vector2(cos(target.global_rotation), sin(target.global_rotation))
+		chain[0].bone.global_position = target_global_position - direction * chain[0].bone.get_bone_length()
 	
 	for bone_data in chain:
 		var bone: LaBone = bone_data.bone
@@ -297,9 +296,6 @@ func _apply_backwards_modifications() -> void:
 		# Calculate new start position for the bone.
 		var stretch: Vector2 = target_global_position - bone.global_position
 		var ratio: float = bone.get_bone_length() / stretch.length()
-		var b_len: float = bone.get_bone_length() #debug
-		var s_len: float = stretch.length() #debug
-		var new_global_position: Vector2 = target_global_position - stretch * ratio #debug
 		bone.global_position = target_global_position - stretch * ratio
 		
 		# Next bone target is this bone start position.
@@ -312,10 +308,9 @@ func _apply_forwards_modifications(base_global_position: Vector2) -> void:
 		var bone_data: BoneData = chain[i]
 		var bone: LaBone = bone_data.bone
 		
-		# No need to check if each bone is inside tree or exist
-		# because this would mean the same for the tip_bone.
-		
 		bone.global_position = base_global_position
+		
+		# Calculate next bone start position.
 		var direction := Vector2(cos(bone.global_rotation), sin(bone.global_rotation))
 		base_global_position = bone.global_position + direction * bone.get_bone_length()
 

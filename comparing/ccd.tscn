@@ -80,7 +80,7 @@ position = Vector2(100, 0)
 script = ExtResource("1_vjioq")
 
 [node name="Aim" type="Node2D" parent="."]
-position = Vector2(294, 0)
+position = Vector2(350, 0)
 
 [node name="AimCCDIK" type="Marker2D" parent="Aim"]
 position = Vector2(0, -100)
