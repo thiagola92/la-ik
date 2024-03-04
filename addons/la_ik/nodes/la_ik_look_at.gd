@@ -68,7 +68,7 @@ func _start_listen_bone() -> void:
 	if not bone.tree_exiting.is_connected(queue_redraw):
 		bone.tree_exiting.connect(queue_redraw)
 	
-	# If bone is queue for deletion, set it to null.
+	# If bone is about to be deleted, probably need to set some field to null.
 	if not bone.tree_exiting.is_connected(_forget_bone):
 		bone.tree_exiting.connect(_forget_bone)
 	
@@ -123,10 +123,10 @@ func _apply_modifications(_delta: float) -> void:
 	if not enabled:
 		return
 	
-	if not target:
+	if not target or not target.is_inside_tree():
 		return
 	
-	if not bone:
+	if not bone or not bone.is_inside_tree():
 		return
 	
 	bone.cache_pose()
