@@ -50,7 +50,7 @@ position = Vector2(100, 0)
 script = ExtResource("1_ktmni")
 
 [node name="Aim" type="Marker2D" parent="."]
-position = Vector2(373, 0)
+position = Vector2(291, 0)
 
 [node name="AimFABRIK" type="Marker2D" parent="Aim"]
 position = Vector2(0, -100)

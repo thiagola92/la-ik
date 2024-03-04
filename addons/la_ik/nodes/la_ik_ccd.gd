@@ -170,7 +170,7 @@ func _set(property: StringName, value: Variant) -> bool:
 			
 			# There is no guarantee that it will resize in order,
 			# so we need to walk through all to make sure.
-			for i in index:
+			for i in chain.size():
 				if chain[i] == null:
 					chain[i] = BoneData.new(null)
 		
