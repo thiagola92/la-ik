@@ -353,14 +353,13 @@ func _apply_modifications(_delta: float) -> void:
 	# Changing one bone will emit a signal to update others bones autocalculated length/angle,
 	# so we need to cache everyone before changing anyone.
 	for bone_data in chain:
+		# No need to check if each bone is inside tree or exist
+		# because this would mean the same for the tip_bone.
 		bone_data.bone.cache_pose()
 		bone_data.bone.is_pose_modified = true
 	
 	for bone_data in chain:
 		var bone: LaBone = bone_data.bone
-		
-		# No need to check if each bone is inside tree or exist
-		# because this would mean the same for the tip_bone.
 		
 		if bone_data.skip:
 			continue

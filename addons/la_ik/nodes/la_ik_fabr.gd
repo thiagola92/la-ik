@@ -32,6 +32,11 @@ extends LaIK
 
 @export var target: Node2D
 
+## How many iterations do per execution.[br][br]
+## More executions will make it converge to the final position faster.[br]
+## This is capped at 10 to avoid to accidents of setting it too high.
+@export_range(1, 10, 1) var iterations: int = 10
+
 # Contains data about all bones from root_bone until tip_bone (not including it).
 # Ordered from tip_bone to root_bone, because this is the order which they are discovered.
 var chain: Array[BoneData]
@@ -264,25 +269,27 @@ func _apply_modifications(_delta: float) -> void:
 	# Changing one bone will emit a signal to update others bones autocalculated length/angle,
 	# so we need to cache everyone before changing anyone.
 	for bone_data in chain:
+		# No need to check if each bone is inside tree or exist
+		# because this would mean the same for the tip_bone.
 		bone_data.bone.cache_pose()
 		bone_data.bone.is_pose_modified = true
 	
 	# Where root_bone started (the base of the arm).
 	var base_global_position = root_bone.global_position
 	
-	_apply_backwards_modifications()
-	_apply_forwards_modifications(base_global_position)
+	for i in iterations:
+		_apply_backwards_modifications()
+		_apply_forwards_modifications(base_global_position)
 
 
 # Walk backwards applying modifications.
 func _apply_backwards_modifications() -> void:
+	# Each bones target is the next bone position,
+	# except the last bone which uses the real target.
 	var target_global_position = target.global_position
 	
 	for bone_data in chain:
 		var bone: LaBone = bone_data.bone
-		
-		# No need to check if each bone is inside tree or exist
-		# because this would mean the same for the tip_bone.
 		
 		# Look at target first.
 		bone.look_at(target_global_position)
