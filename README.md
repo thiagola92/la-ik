@@ -31,6 +31,7 @@ Bad:
 	- [SkeletonModification2DLookAt](https://docs.godotengine.org/en/stable/classes/class_skeletonmodification2dlookat.html)
 	- [SkeletonModification2DTwoBonesIK](https://docs.godotengine.org/en/stable/classes/class_skeletonmodification2dtwoboneik.html)
 	- [SkeletonModification2DCCDIK](https://docs.godotengine.org/en/stable/classes/class_skeletonmodification2dccdik.html)
+	- [SkeletonModification2DFABRIK](https://docs.godotengine.org/en/stable/classes/class_skeletonmodification2dfabrik.html)
 - No integration with Godot default nodes
 	- Can't add skeleton to [Polygon2D.skeleton](https://docs.godotengine.org/en/stable/classes/class_polygon2d.html#class-polygon2d-property-skeleton)
  
