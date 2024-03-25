@@ -161,7 +161,7 @@ func _apply_modifications(_delta: float) -> void:
 	
 	var bone_one_length: float = bone_one.get_bone_length()
 	var bone_two_length: float = bone_two.get_bone_length()
-	var out_of_range: bool = target_distance > bone_one_length + bone_two_length 
+	var out_of_range: bool = target_distance > bone_one_length + bone_two_length
 	var angle_to_x_axis: float = (target.global_position - bone_one.global_position).angle()
 	var same_sign: bool = bone_one.global_scale.sign().x == bone_one.global_scale.sign().y
 	
@@ -202,7 +202,7 @@ func _apply_modifications(_delta: float) -> void:
 		bone_one.global_rotation = angle_to_x_axis + angle_0 + bone_one.get_bone_angle()
 	
 	# Local rotation is unaffected by scale changes.
-	bone_two.rotation = -PI - angle_1 - bone_two.get_bone_angle() + bone_one.get_bone_angle()
+	bone_two.rotation = PI - angle_1 - bone_two.get_bone_angle() + bone_one.get_bone_angle()
 
 
 func _draw_gizmo() -> void:
