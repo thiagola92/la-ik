@@ -269,15 +269,15 @@ func _apply_modifications(_delta: float) -> void:
 		bone_data.bone.is_pose_modified = true
 	
 	# Where root_bone started (the base of the arm).
-	var base_global_position = root_bone.global_position
+	var base_global_position: Vector2 = root_bone.global_position
 	
 	for i in iterations:
-		_apply_backwards_modifications()
-		_apply_forwards_modifications(base_global_position)
+		_apply_forwards_modifications()
+		_apply_backwards_modifications(base_global_position)
 
 
-# Walk backwards applying modifications.
-func _apply_backwards_modifications() -> void:
+# Move each bone forward to the target position.
+func _apply_forwards_modifications() -> void:
 	# The bone closest to the tip is aiming the target,
 	# others bones are aiming the following bone.
 	var target_global_position = target.global_position
@@ -293,6 +293,10 @@ func _apply_backwards_modifications() -> void:
 		# Look at target first.
 		bone.look_at(target_global_position)
 		
+		# Avoid calculating ratio as INF.
+		if target_global_position == bone.global_position:
+			continue
+		
 		# Calculate new start position for the bone.
 		var stretch: Vector2 = target_global_position - bone.global_position
 		var ratio: float = bone.get_bone_length() / stretch.length()
@@ -302,8 +306,8 @@ func _apply_backwards_modifications() -> void:
 		target_global_position = bone.global_position
 
 
-# Walk forwards applying modifications.
-func _apply_forwards_modifications(base_global_position: Vector2) -> void:
+# Move each bone backward to the base position.
+func _apply_backwards_modifications(base_global_position: Vector2) -> void:
 	for i in range(chain.size() - 1, -1, -1):
 		var bone_data: BoneData = chain[i]
 		var bone: LaBone = bone_data.bone
@@ -313,6 +317,7 @@ func _apply_forwards_modifications(base_global_position: Vector2) -> void:
 		# Calculate next bone start position.
 		var direction := Vector2(cos(bone.global_rotation), sin(bone.global_rotation))
 		base_global_position = bone.global_position + direction * bone.get_bone_length()
+
 
 # Data used in each bone during execution.
 class BoneData extends RefCounted:

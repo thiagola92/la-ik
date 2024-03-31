@@ -1,5 +1,4 @@
 ## Abstract base class for all 2D inverse kinematic.
-@tool
 class_name LaIK
 extends Node2D
 
