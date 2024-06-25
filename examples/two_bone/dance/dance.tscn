@@ -1,14 +1,58 @@
-[gd_scene load_steps=9 format=3 uid="uid://bw3j6dm8e8emd"]
+[gd_scene load_steps=19 format=3 uid="uid://bw3j6dm8e8emd"]
 
 [ext_resource type="Texture2D" uid="uid://dp6s8b8wco6xq" path="res://examples/two_bone/dance/body.svg" id="1_th35q"]
 [ext_resource type="Script" path="res://addons/la_ik/nodes/la_bone.gd" id="3_71ts3"]
 [ext_resource type="Script" path="res://addons/la_ik/nodes/la_ik_two_bone.gd" id="6_3gnp6"]
 [ext_resource type="Script" path="res://addons/la_ik/nodes/la_ik_look_at.gd" id="7_xp0yt"]
 
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_0osr0"]
+animation = &"DANCE"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_nv6lx"]
+animation = &"DANCE"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_q3txy"]
+animation = &"DANCE_2"
+
+[sub_resource type="AnimationNodeAnimation" id="AnimationNodeAnimation_kvq06"]
+animation = &"DANCE_2"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_iptdw"]
+switch_mode = 2
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_yuy6x"]
+switch_mode = 2
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_5xfnx"]
+switch_mode = 2
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_mxvqd"]
+switch_mode = 2
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="AnimationNodeStateMachineTransition_ua7le"]
+switch_mode = 2
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachine" id="AnimationNodeStateMachine_pm44y"]
+states/DANCE/node = SubResource("AnimationNodeAnimation_nv6lx")
+states/DANCE/position = Vector2(223, 99)
+"states/DANCE 2/node" = SubResource("AnimationNodeAnimation_0osr0")
+"states/DANCE 2/position" = Vector2(347, 99)
+states/DANCE_2/node = SubResource("AnimationNodeAnimation_kvq06")
+states/DANCE_2/position = Vector2(488, 99)
+"states/DANCE_2 2/node" = SubResource("AnimationNodeAnimation_q3txy")
+"states/DANCE_2 2/position" = Vector2(634, 99)
+states/End/position = Vector2(779, 99)
+states/Start/position = Vector2(90, 100)
+transitions = ["Start", "DANCE", SubResource("AnimationNodeStateMachineTransition_iptdw"), "DANCE", "DANCE 2", SubResource("AnimationNodeStateMachineTransition_yuy6x"), "DANCE 2", "DANCE_2", SubResource("AnimationNodeStateMachineTransition_5xfnx"), "DANCE_2", "DANCE_2 2", SubResource("AnimationNodeStateMachineTransition_mxvqd"), "DANCE_2 2", "End", SubResource("AnimationNodeStateMachineTransition_ua7le")]
+
 [sub_resource type="Animation" id="Animation_x8jgj"]
 resource_name = "DANCE"
 length = 1.6
-loop_mode = 1
 step = 0.1
 tracks/0/type = "value"
 tracks/0/imported = false
@@ -17,10 +61,10 @@ tracks/0/path = NodePath("Skeleton/Body:position")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.2, 0.4, 0.6, 0.8, 1, 1.2, 1.4),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1),
+"times": PackedFloat32Array(0, 0.2, 0.4, 0.6, 0.8, 1, 1.2, 1.4, 1.6),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1),
 "update": 0,
-"values": [Vector2(-45, 190), Vector2(-11, 178), Vector2(-45, 190), Vector2(-11, 178), Vector2(-45, 190), Vector2(-11, 178), Vector2(-45, 190), Vector2(-11, 178)]
+"values": [Vector2(-45, 190), Vector2(-11, 178), Vector2(-45, 190), Vector2(-11, 178), Vector2(-45, 190), Vector2(-11, 178), Vector2(-45, 190), Vector2(-11, 178), Vector2(-45, 190)]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -77,10 +121,10 @@ tracks/5/path = NodePath("Targets/HandL:position")
 tracks/5/interp = 1
 tracks/5/loop_wrap = true
 tracks/5/keys = {
-"times": PackedFloat32Array(0, 0.2, 0.4, 0.6, 0.8, 1, 1.2, 1.4),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1),
+"times": PackedFloat32Array(0, 0.2, 0.4, 0.6, 0.8, 1, 1.2, 1.4, 1.6),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1),
 "update": 0,
-"values": [Vector2(-75, 183), Vector2(-44, 177), Vector2(-75, 183), Vector2(-44, 177), Vector2(-75, 183), Vector2(-44, 177), Vector2(-75, 183), Vector2(-44, 177)]
+"values": [Vector2(-75, 183), Vector2(-44, 177), Vector2(-75, 183), Vector2(-44, 177), Vector2(-75, 183), Vector2(-44, 177), Vector2(-75, 183), Vector2(-44, 177), Vector2(-75, 183)]
 }
 tracks/6/type = "value"
 tracks/6/imported = false
@@ -89,10 +133,10 @@ tracks/6/path = NodePath("Targets/HandR:position")
 tracks/6/interp = 1
 tracks/6/loop_wrap = true
 tracks/6/keys = {
-"times": PackedFloat32Array(0, 0.2, 0.4, 0.6, 0.8, 1, 1.2, 1.4),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1),
+"times": PackedFloat32Array(0, 0.2, 0.4, 0.6, 0.8, 1, 1.2, 1.4, 1.6),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1),
 "update": 0,
-"values": [Vector2(-17, 199), Vector2(23, 180), Vector2(-17, 199), Vector2(23, 180), Vector2(-17, 199), Vector2(23, 180), Vector2(-17, 199), Vector2(23, 180)]
+"values": [Vector2(-17, 199), Vector2(23, 180), Vector2(-17, 199), Vector2(23, 180), Vector2(-17, 199), Vector2(23, 180), Vector2(-17, 199), Vector2(23, 180), Vector2(-17, 199)]
 }
 tracks/7/type = "value"
 tracks/7/imported = false
@@ -110,7 +154,6 @@ tracks/7/keys = {
 [sub_resource type="Animation" id="Animation_jpcma"]
 resource_name = "DANCE_2"
 length = 3.2
-loop_mode = 1
 step = 0.1
 tracks/0/type = "value"
 tracks/0/imported = false
@@ -119,10 +162,10 @@ tracks/0/path = NodePath("Skeleton/Body:position")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/keys = {
-"times": PackedFloat32Array(0, 0.2, 0.4, 0.6, 0.8, 1, 1.2, 1.4, 1.6, 1.8, 2, 2.2, 2.4, 2.6, 2.8, 3),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+"times": PackedFloat32Array(0, 0.2, 0.4, 0.6, 0.8, 1, 1.2, 1.4, 1.6, 1.8, 2, 2.2, 2.4, 2.6, 2.8, 3, 3.2),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
 "update": 0,
-"values": [Vector2(-45, 190), Vector2(-11, 178), Vector2(-45, 190), Vector2(-11, 178), Vector2(-45, 190), Vector2(-11, 178), Vector2(-45, 190), Vector2(-11, 178), Vector2(-45, 190), Vector2(-11, 178), Vector2(-45, 190), Vector2(-11, 178), Vector2(-45, 190), Vector2(-11, 178), Vector2(-45, 190), Vector2(-11, 178)]
+"values": [Vector2(-45, 190), Vector2(-11, 178), Vector2(-45, 190), Vector2(-11, 178), Vector2(-45, 190), Vector2(-11, 178), Vector2(-45, 190), Vector2(-11, 178), Vector2(-45, 190), Vector2(-11, 178), Vector2(-45, 190), Vector2(-11, 178), Vector2(-45, 190), Vector2(-11, 178), Vector2(-45, 190), Vector2(-11, 178), Vector2(-45, 190)]
 }
 tracks/1/type = "value"
 tracks/1/imported = false
@@ -179,10 +222,10 @@ tracks/5/path = NodePath("Targets/HandL:position")
 tracks/5/interp = 1
 tracks/5/loop_wrap = true
 tracks/5/keys = {
-"times": PackedFloat32Array(0, 0.2, 0.4, 0.6, 0.8, 1, 1.2, 1.4, 1.6, 1.8, 2, 2.2, 2.4, 2.6, 2.8, 3),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+"times": PackedFloat32Array(0, 0.2, 0.4, 0.6, 0.8, 1, 1.2, 1.4, 1.6, 1.8, 2, 2.2, 2.4, 2.6, 2.8, 3, 3.2),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
 "update": 0,
-"values": [Vector2(81, 250), Vector2(148, 174), Vector2(169, -6), Vector2(148, 174), Vector2(81, 250), Vector2(148, 174), Vector2(169, -6), Vector2(148, 174), Vector2(81, 250), Vector2(148, 174), Vector2(169, -6), Vector2(148, 174), Vector2(81, 250), Vector2(148, 174), Vector2(169, -6), Vector2(148, 174)]
+"values": [Vector2(81, 250), Vector2(148, 174), Vector2(169, -6), Vector2(148, 174), Vector2(81, 250), Vector2(148, 174), Vector2(169, -6), Vector2(148, 174), Vector2(81, 250), Vector2(148, 174), Vector2(169, -6), Vector2(148, 174), Vector2(81, 250), Vector2(148, 174), Vector2(169, -6), Vector2(148, 174), Vector2(81, 250)]
 }
 tracks/6/type = "value"
 tracks/6/imported = false
@@ -191,10 +234,10 @@ tracks/6/path = NodePath("Targets/HandR:position")
 tracks/6/interp = 1
 tracks/6/loop_wrap = true
 tracks/6/keys = {
-"times": PackedFloat32Array(0, 0.2, 0.4, 0.6, 0.8, 1, 1.2, 1.4, 1.6, 1.8, 2, 2.2, 2.4, 2.6, 2.8, 3),
-"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
+"times": PackedFloat32Array(0, 0.2, 0.4, 0.6, 0.8, 1, 1.2, 1.4, 1.6, 1.8, 2, 2.2, 2.4, 2.6, 2.8, 3, 3.2),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1),
 "update": 0,
-"values": [Vector2(169, -6), Vector2(173, 93), Vector2(81, 250), Vector2(173, 93), Vector2(169, -6), Vector2(173, 93), Vector2(81, 250), Vector2(173, 93), Vector2(169, -6), Vector2(173, 93), Vector2(81, 250), Vector2(173, 93), Vector2(169, -6), Vector2(173, 93), Vector2(81, 250), Vector2(173, 93)]
+"values": [Vector2(169, -6), Vector2(173, 93), Vector2(81, 250), Vector2(173, 93), Vector2(169, -6), Vector2(173, 93), Vector2(81, 250), Vector2(173, 93), Vector2(169, -6), Vector2(173, 93), Vector2(81, 250), Vector2(173, 93), Vector2(169, -6), Vector2(173, 93), Vector2(81, 250), Vector2(173, 93), Vector2(169, -6)]
 }
 tracks/7/type = "value"
 tracks/7/imported = false
@@ -340,6 +383,34 @@ _data = {
 }
 
 [node name="Dance" type="Node2D"]
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2(0, 200)
+
+[node name="AnimationTree" type="AnimationTree" parent="."]
+tree_root = SubResource("AnimationNodeStateMachine_pm44y")
+anim_player = NodePath("../AnimationPlayer")
+parameters/current_length = 0.0
+parameters/current_position = 0.0
+parameters/current_delta = 0.0
+parameters/DANCE/current_length = 1.6
+parameters/DANCE/current_position = 1.6
+parameters/DANCE/current_delta = 0.0169986
+"parameters/DANCE 2/current_length" = 1.6
+"parameters/DANCE 2/current_position" = 1.6
+"parameters/DANCE 2/current_delta" = 0.0329196
+parameters/DANCE_2/current_length = 3.2
+parameters/DANCE_2/current_position = 3.2
+parameters/DANCE_2/current_delta = 0.0332683
+"parameters/DANCE_2 2/current_length" = 3.2
+"parameters/DANCE_2 2/current_position" = 3.2
+"parameters/DANCE_2 2/current_delta" = 0.0168393
+parameters/End/current_length = 0.0
+parameters/End/current_position = 0.0
+parameters/End/current_delta = 0.0
+parameters/Start/current_length = 0.0
+parameters/Start/current_position = 0.0
+parameters/Start/current_delta = 0.0
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="."]
 libraries = {

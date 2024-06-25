@@ -1,12 +1,12 @@
 # LaIK
-Inverse Kinematic addon for Godot.
+Inverse Kinematic addon for Godot.  
 
-# Usage
-First, there is no `Node` like `Skeleton2D`! Why? I don't know but my plan is to wait the "need" for it.  
-Second, inverse kinematics are not `Resource`! There is a `Node` for each IK.  
-Third, this will be a simple and short "Usage"! I change so much this project that is better not making any commitment to the documentation.  
+Here is a [short video](https://youtu.be/42IAwWF51gE) (without sound) showing how to use 3 of the inverse kinematics.  
 
-My commitment is so low that I made a [short video](https://youtu.be/42IAwWF51gE) (without sound) showing how to use 3 of the inverse kinematics.  
+Main differences between Godot IK and this addon are:  
+1. There is no Node like [Skeleton2D](https://docs.godotengine.org/en/stable/classes/class_skeleton2d.html) to handle all bones.
+	- Why? I don't know... My plan is to wait the "need" for it.  
+2. Inverse kinematics are not [Resource](https://docs.godotengine.org/en/stable/classes/class_resource.html), there is a Node for each IK.  
 
 # Installation
 - Download latest release
