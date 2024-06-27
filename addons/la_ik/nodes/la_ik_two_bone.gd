@@ -1,4 +1,5 @@
 @tool
+@icon("../icons/la_ik_two_bone.svg")
 class_name LaIKTwoBone
 extends LaIK
 

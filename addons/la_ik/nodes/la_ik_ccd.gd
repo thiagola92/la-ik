@@ -1,4 +1,5 @@
 @tool
+@icon("../icons/la_ik_ccd.svg")
 class_name LaIKCCD
 extends LaIK
 

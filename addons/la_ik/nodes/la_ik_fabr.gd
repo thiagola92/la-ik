@@ -1,4 +1,5 @@
 @tool
+@icon("../icons/la_ik_fabk.svg")
 class_name LaIKFABR
 extends LaIK
 

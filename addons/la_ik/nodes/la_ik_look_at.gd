@@ -1,4 +1,5 @@
 @tool
+@icon("../icons/la_ik_look_at.svg")
 class_name LaIKLookAt
 extends LaIK
 
